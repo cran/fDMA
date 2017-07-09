@@ -1,0 +1,63 @@
+\name{plot.grid.dma}
+\alias{plot.grid.dma}
+
+\title{Plots Selected Outcomes from \link{grid.DMA} Function.}
+
+\description{The function plots selected outcomes from \link{grid.DMA}.}
+
+\usage{\method{plot}{grid.dma}(x, ...)}
+
+\arguments{
+\item{x}{an object of code{grid.dma} class}
+\item{...}{not used}
+}
+
+\details{
+If \code{x} comes from estimation of Dynamic Model Averaging (DMA), after executing the command, the User is asked to choose
+
+1 - for plotting Mean Squared Error (MSE) for all estimated models,
+
+2 - for plotting Mean Absolute Error (MAE) for all estimated models,
+
+3 - for plotting posteriori inclusion probabilities (including constant) for all estimated models, the outcomes are saved in separate \code{png} files in the current working directory, and additionally, plots for different variables are collected into one big plot (also saved as a \code{png} file in the current working directory),
+
+4 - for plotting expected coefficients (including constant) for all estimated models, the outcomes are saved in separate \code{png} files in the current working directory, and additionally, plots for different variables are collected into one big plot (also saved as a \code{png} file in the current working directory).
+
+Chosing 0 exits the \code{plot} command.
+
+---------------------------------------
+
+If \code{x} comes from estimation of Dynamic Model Selection (DMS) or Median Probability Model (MED), after executing the command, the User is asked to choose
+
+1 - for plotting Mean Squared Error (MSE) for all estimated models,
+
+2 - for plotting Mean Absolute Error (MAE) for all estimated models,
+
+3 - for plotting expected coefficients (including constant) for all estimated models, the outcomes are saved in separate \code{png} files in the current working directory, and additionally, plots for different variables are collected into one big plot (also saved as a \code{png} file in the current working directory).
+
+Chosing 0 exits the \code{plot} command.
+}
+
+\note{
+It is suggested to execute \code{\link{graphics.off}} before exectuing \code{plot} command \code{grid.dma} object. However, the User should take care to save all other plots before executing this command, as they can be lost.
+
+If \code{\link{graphics.off}} is not executed before plotting \code{grid.dma} object, sometimes a legend might cover the important parts of the plot.
+}
+
+\examples{
+\dontrun{
+data(crudeoil)
+wti <- crudeoil[-1,1]
+drivers <- (lag(crudeoil[,-1],k=1))[-1,]
+ld.wti <- (diff(log(wti)))[-1,]
+ld.drivers <- (diff(log(drivers)))[-1,]
+gra <- c(0.99,0.98,0.97)
+grl <- c(0.99,0.95)
+g1 <- grid.DMA(y=ld.wti,x=ld.drivers,grid.alpha=gra,grid.lambda=grl,initvar=1)
+g2 <- grid.DMA(y=ld.wti,x=ld.drivers,grid.alpha=gra,grid.lambda=grl,initvar=1,model="dms")
+# graphics.off()
+plot(g1)
+# graphics.off()
+plot(g2)
+}
+}
