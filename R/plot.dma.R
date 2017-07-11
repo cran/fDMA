@@ -12,24 +12,7 @@ plot.dma <- function(x, ...)
       {
         stop("package >>graphics<< is required")
       }
-      
-    if (x$parameters[1,4] == "DMA")
-      {
-        choices <- c("actual vs. predicted", "residuals","exp. var", "posteriori inclusion probabilities - one plot", 
-                     "posteriori inclusion probabilities - separate plots (files in working directory)",
-                     "expected coefficients - one plot", "expected coefficients - separate plots (files in working directory)" )
-        pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-        switch(pick, plot1(x), plot2(x), plot3(x), plot4(x), plot5(x), plot6(x), plot7(x))
-      }
-    if (x$parameters[1,4] == "DMS" || x$parameters[1,4] == "MED")
-      {
-        choices <- c("actual vs. predicted", "residuals","exp. var", "posteriori inclusion probabilities", 
-                     "expected coefficients - one plot", "expected coefficients - separate plots (files in working directory)" )
-        pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-        switch(pick, plot1(x), plot2(x), plot3(x), plot4(x), plot6(x), plot7(x))
-      }
-  
-
+       
 plot1 <- function(x)
   {
   
@@ -268,5 +251,23 @@ plot7 <- function(x)
       dev.off()
   }
 
+    if (x$parameters[1,4] == "DMA")
+      {
+        choices <- c("actual vs. predicted", "residuals","exp. var", "posteriori inclusion probabilities - one plot", 
+                     "posteriori inclusion probabilities - separate plots (files in working directory)",
+                     "expected coefficients - one plot", "expected coefficients - separate plots (files in working directory)" )
+        pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
+        switch(pick, plot1(x), plot2(x), plot3(x), plot4(x), plot5(x), plot6(x), plot7(x))
+      }
+    if (x$parameters[1,4] == "DMS" || x$parameters[1,4] == "MED")
+      {
+        choices <- c("actual vs. predicted", "residuals","exp. var", "posteriori inclusion probabilities", 
+                     "expected coefficients - one plot", "expected coefficients - separate plots (files in working directory)" )
+        pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
+        switch(pick, plot1(x), plot2(x), plot3(x), plot4(x), plot6(x), plot7(x))
+      }
+
 
   }
+  
+  

@@ -3,7 +3,7 @@
 
 \title{Prints \code{grid.dma} Object.}
 
-\description{The function prints selected outcomes obtained from \link{grid.DMA}.}
+\description{The function prints selected outcomes obtained from \code{\link{grid.DMA}}.}
 
 \usage{\method{print}{grid.dma}(x, ...)}
 

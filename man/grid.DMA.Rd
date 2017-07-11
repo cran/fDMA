@@ -1,12 +1,12 @@
 \name{grid.DMA}
 \alias{grid.DMA}
 
-\title{Computes \link{fDMA} Function for Multiple Values of \code{alpha} and \code{lambda}.}
+\title{Computes \code{\link{fDMA}} Function for Multiple Values of \code{alpha} and \code{lambda}.}
 
 \description{
-Sometimes it is necessary to consider various values of parameters \eqn{\alpha} and \eqn{\lambda} in Dynamic Model Averaging (or Dynamic Model Selection, etc.). This function computes fDMA function for all combinations of \code{alpha} and \code{lambda} for given grids.
+Sometimes it is necessary to consider various values of parameters \code{alpha} and \code{lambda} in Dynamic Model Averaging (or Dynamic Model Selection, etc.). This function computes \code{\link{fDMA}} function for all combinations of \code{alpha} and \code{lambda} for given grids.
 
-This function is a wrapper of \link{fDMA}.
+This function is a wrapper of \code{\link{fDMA}}.
 }
 
 \usage{
@@ -16,31 +16,31 @@ mods.incl=NULL,DOW=NULL,DOW.nmods=NULL,DOW.type=NULL)
 }
 
 \arguments{
-\item{y}{see \link{fDMA}}
-\item{x}{see \link{fDMA}}
-\item{grid.alpha}{a numeric vector}
-\item{grid.lambda}{a numeric vector}
-\item{initvar}{see \link{fDMA}}
-\item{W}{see \link{fDMA}}
-\item{initial.period}{see \link{fDMA}}
-\item{V.meth}{see \link{fDMA}}
-\item{kappa}{see \link{fDMA}}
-\item{gprob}{see \link{fDMA}}
-\item{omega}{see \link{fDMA}}
-\item{model}{see \link{fDMA}}
-\item{parallel.grid}{optional, a logical, indicate whether parallel computations should be used, by default \code{parallel=FALSE}}
-\item{m.prior}{see \link{fDMA}}
-\item{mods.incl}{see \link{fDMA}}
-\item{DOW}{see \link{fDMA}}
-\item{DOW.nmods}{see \link{fDMA}}
-\item{DOW.type}{see \link{fDMA}}
+\item{y}{see \code{\link{fDMA}}}
+\item{x}{see \code{\link{fDMA}}}
+\item{grid.alpha}{a numeric \code{\link[base]{vector}} of different values of \code{alpha}}
+\item{grid.lambda}{a numeric \code{\link[base]{vector}} of different values of \code{lambda}}
+\item{initvar}{see \code{\link{fDMA}}}
+\item{W}{see \code{\link{fDMA}}}
+\item{initial.period}{see \code{\link{fDMA}}}
+\item{V.meth}{see \code{\link{fDMA}}}
+\item{kappa}{see \code{\link{fDMA}}}
+\item{gprob}{see \code{\link{fDMA}}}
+\item{omega}{see \code{\link{fDMA}}}
+\item{model}{see \code{\link{fDMA}}}
+\item{parallel.grid}{optional, \code{\link[base]{logical}}, indicate whether parallel computations should be used, by default \code{parallel=FALSE}}
+\item{m.prior}{see \code{\link{fDMA}}}
+\item{mods.incl}{see \code{\link{fDMA}}}
+\item{DOW}{see \code{\link{fDMA}}}
+\item{DOW.nmods}{see \code{\link{fDMA}}}
+\item{DOW.type}{see \code{\link{fDMA}}}
 }
 
-\value{an object of class \code{grid.dma}
+\value{an object of class \code{grid.dma}, \code{\link[base]{list}} of
 
-\item{$models}{a list of list of models}
-\item{$MSE}{a matrix with Mean Squared Error (MSE) for all estimated models}
-\item{$MAE}{a matrix with Mean Absolute Error (MAE) for all estimated models}
+\item{$models}{\code{\link[base]{list}} of \code{\link[base]{list}} of models}
+\item{$MSE}{\code{\link[base]{matrix}} with Mean Squared Error (MSE) for all estimated models}
+\item{$MAE}{\code{\link[base]{matrix}} with Mean Absolute Error (MAE) for all estimated models}
 }
 
 \examples{
@@ -60,5 +60,5 @@ grl <- c(0.99,0.95)
 g <- grid.DMA(y=ld.wti[1:20,1],x=ld.drivers[1:20,1:4],grid.alpha=gra,grid.lambda=grl,initvar=10)
 }
 # extract model with alpha=0.97 and lambda=0.95
-g$models[[3]][[2]]
+model <- g$models[[3]][[2]]
 }

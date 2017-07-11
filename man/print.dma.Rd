@@ -3,7 +3,7 @@
 
 \title{Prints \code{dma} Object.}
 
-\description{The function prints selected outcomes obtained from \link{fDMA}.}
+\description{The function prints selected outcomes obtained from \code{\link{fDMA}}.}
 
 \usage{\method{print}{dma}(x, ...)}
 

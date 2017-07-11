@@ -13,19 +13,24 @@ gNormalize(data)
 }
 
 \arguments{
-\item{data}{a matrix, observations are put in rows, and variables are grouped by columns}
+\item{data}{\code{\link[base]{matrix}}, observations are put in rows, and variables are grouped by columns}
 }
 
 \value{
-a matrix
+\code{\link[base]{matrix}}
 }
 
 \examples{
 data(trends)
-gNormalize(trends)
+gt <- gNormalize(trends)
+
 gNormalize(rbind(c(0,1,2),c(1,2,3)))
 }
 
 \references{
-Koop, G., Onorante, L., 2014. Macroeconomic nowcasting using Google probabilities. \url{http://www.ecb.europa.eu/events/pdf/conferences/140407/OnoranteKoop_MacroeconomicNowcastingUsingGoogleProbabilities.pdf}
+Koop, G., Onorante, L., 2014. Macroeconomic nowcasting using Google probabilities. 
+
+http://www.ecb.europa.eu/events/pdf/conferences/140407/
+
+OnoranteKoop_MacroeconomicNowcastingUsingGoogleProbabilities.pdf. 
 }

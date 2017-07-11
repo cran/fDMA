@@ -3,11 +3,11 @@
 
 \title{Google Trends for Crude Oil Data.}
 
-\description{Google Trends for Crude Oil Data}
+\description{Google Trends for Crude Oil Data.}
 
 \usage{data(trends)}
 
-\format{\code{trends} is a \code{xts} object such that
+\format{\code{trends} is \code{\link[xts]{xts}} object such that
 \itemize{
 \item \code{trends$stock_markets} -- Google Trends for "stock markets"
 \item \code{trends$interest_rate} -- Google Trends for "interes rate"

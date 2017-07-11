@@ -3,11 +3,11 @@
 
 \title{Crude Oil Data.}
 
-\description{Selected data from oil market}
+\description{Selected data from oil market.}
 
 \usage{data(crudeoil)}
 
-\format{\code{crudeoil} is a \code{xts} objects such that
+\format{\code{crudeoil} is \code{\link[xts]{xts}} object such that
 \itemize{
 \item \code{crudeoil$WTI} -- WTI spot price in USD per barrel
 \item \code{crudeoil$MSCI} -- MSCI World Index
@@ -34,8 +34,8 @@ http://www.eia.gov
 
 \url{http://www.msci.com/end-of-day-data-search}
 
-\url{http://www.worldsteel.org/steel-by-topic/statistics/Statistics-monthly-crude-steel-and-iron-data-
-/steel-archive.html}
+http://www.worldsteel.org/steel-by-topic/statistics/Statistics-monthly-crude-steel-and-iron-data-
+/steel-archive.html
 }
 
 \examples{
@@ -44,5 +44,7 @@ wti <- crudeoil[-1,1]
 drivers <- (lag(crudeoil[,-1],k=1))[-1,]
 ld.wti <- (diff(log(wti)))[-1,]
 ld.drivers <- (diff(log(drivers)))[-1,]
-\dontrun{m <- fDMA(y=ld.wti,x=ld.drivers,alpha=0.99,lambda=0.99,initvar=1,model="dma")}
+\dontrun{
+m <- fDMA(y=ld.wti,x=ld.drivers,alpha=0.99,lambda=0.99,initvar=1,model="dma")
+}
 }

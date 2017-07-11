@@ -3,7 +3,7 @@
 
 \title{Summarizes Outcomes from \code{grid.dma} Objects.}
 
-\description{The function summarizes outcomes obtained from \link{grid.DMA}.}
+\description{The function summarizes outcomes obtained from \code{\link{grid.DMA}}.}
 
 \usage{\method{summary}{grid.dma}(object, ...)}
 
@@ -13,7 +13,7 @@
 }
 
 \details{
-The function produces the outcomes as \code{print}.
+The function produces the outcomes as \code{\link{print.grid.dma}}.
 
 Additionally:
 

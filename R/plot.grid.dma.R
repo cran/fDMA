@@ -12,23 +12,7 @@ plot.grid.dma <- function(x, ...)
       {
         stop("package >>graphics<< is required")
       }
-
-if (x$models[[1]][[1]]$parameters[4]=="DMA")
-      {
-        choices <- c("MSE", "MAE","posteriori inclusion probabilities - separate plots (files in working directory)",
-                     "expected coefficients - separate plots (files in working directory)" )
-        pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-        switch(pick, plot1g(x), plot2g(x), plot3g(x), plot4g(x))
-      }
-else
-      {
-        choices <- c("MSE", "MAE",
-                     "expected coefficients - separate plots (files in working directory)" )
-        pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-        switch(pick, plot1g(x), plot2g(x), plot4g(x))
-      }
-  
-      
+   
 plot1g <- function(x)
   {
     d <- apply(x$MSE, 2, rev)
@@ -216,6 +200,21 @@ plot4g <- function(x)
       dev.off()
   }
   
-  
+if (x$models[[1]][[1]]$parameters[4]=="DMA")
+      {
+        choices <- c("MSE", "MAE","posteriori inclusion probabilities - separate plots (files in working directory)",
+                     "expected coefficients - separate plots (files in working directory)" )
+        pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
+        switch(pick, plot1g(x), plot2g(x), plot3g(x), plot4g(x))
+      }
+else
+      {
+        choices <- c("MSE", "MAE",
+                     "expected coefficients - separate plots (files in working directory)" )
+        pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
+        switch(pick, plot1g(x), plot2g(x), plot4g(x))
+      }
+
+ 
   }
   

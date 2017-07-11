@@ -12,12 +12,12 @@ roll.reg(y,x,window)
 }
 
 \arguments{
-\item{y}{a numeric or a column matrix of a dependent variable}
-\item{x}{a matrix of independent variables, different columns should correspond to different variables}
-\item{window}{a numeric, a size of a window for rolling}
+\item{y}{\code{\link[base]{numeric}} or a column \code{\link[base]{matrix}} of a dependent variable}
+\item{x}{\code{\link[base]{matrix}} of independent variables, different columns should correspond to different variables}
+\item{window}{\code{\link[base]{numeric}}, a size of a window for rolling}
 }
 
-\value{a vector of fitted (forecasted) values}
+\value{\code{\link[base]{vector}} of fitted (forecasted) values}
 
 \examples{
 data(crudeoil)

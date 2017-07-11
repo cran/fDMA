@@ -3,7 +3,7 @@
 
 \title{Summarizes Outcomes from \code{dma} Object.}
 
-\description{The function summarizes outcomes obtained from \link{fDMA}.}
+\description{The function summarizes outcomes obtained from \code{\link{fDMA}}.}
 
 \usage{\method{summary}{dma}(object, ...)}
 
@@ -13,11 +13,11 @@
 }
 
 \details{
-The function produces the outcomes as \code{print}.
+The function produces the outcomes as \code{\link{print.dma}}.
 
 Additionally:
 
-If \code{object} comes from Dynamic Model Averaging (DMA), it shows how often (in comparision to the whole analyzed period) a posteriori inclusion probability for a given variable exceeds 1/2. It also shows minimum, maximum and mean posteriori inclusion probability for every variable throught the analyzed period. 
+If \code{object} comes from Dynamic Model Averaging (DMA), it shows how often (in comparision to the whole analyzed period) a posteriori inclusion probability for a given variable exceeds 1/2. It also shows minimum, maximum and mean posteriori inclusion probability for every variable throughout the analyzed period. 
 
 If \code{object} comes from Dynamic Model Selection (DMS) or Median Probability Model (MED), it shows how often (in comparision to the whole analyzed period) a given variable is present in the selected model. 
 }

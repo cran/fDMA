@@ -11,13 +11,13 @@ hit.ratio(y,y.hat,d=NULL)
 }
 
 \arguments{
-\item{y}{a numeric, vector, or one row or one column matrix or xts object, representing a forecasted time-series}
-\item{y.hat}{a numeric, vector, or one row or one column matrix or xts object, representing forecast predictions}
-\item{d}{optional, a logical, \code{d=FALSE} for level time-series, \code{d=TRUE} if time-series already represent changes, by default \code{d=FALSE}}
+\item{y}{\code{\link[base]{numeric}}, \code{\link[base]{vector}}, or one row or one column \code{\link[base]{matrix}} or \code{\link[xts]{xts}} object, representing a forecasted time-series}
+\item{y.hat}{\code{\link[base]{numeric}}, \code{\link[base]{vector}}, or one row or one column \code{\link[base]{matrix}} or \code{\link[xts]{xts}} object, representing forecast predictions}
+\item{d}{optional, \code{\link[base]{logical}}, \code{d=FALSE} for level time-series, \code{d=TRUE} if time-series already represent changes, by default \code{d=FALSE}}
 }
 
 \value{
-a numeric
+\code{\link[base]{numeric}}
 }
 
 \examples{
@@ -28,14 +28,16 @@ ld.wti <- (diff(log(wti)))[-1,]
 ld.drivers <- (diff(log(drivers)))[-1,]
 \dontrun{
 m1 <- fDMA(y=wti,x=drivers,alpha=0.99,lambda=0.99,initvar=10)
-m2 <- fDMA(y=ld.wti,x=ld.drivers,alpha=0.99,lambda=0.99,initvar=10)
 hit.ratio(y=wti,y.hat=m1$y.hat)
+
+m2 <- fDMA(y=ld.wti,x=ld.drivers,alpha=0.99,lambda=0.99,initvar=10)
 hit.ratio(y=ld.wti,y.hat=m2$y.hat,d=TRUE)
 }
 \dontshow{
 m1 <- fDMA(y=wti[1:20,1],x=drivers[1:20,1:4],alpha=0.99,lambda=0.99,initvar=10)
-m2 <- fDMA(y=ld.wti[1:20,1],x=ld.drivers[1:20,1:4],alpha=0.99,lambda=0.99,initvar=10)
 hit.ratio(y=wti[1:20,1],y.hat=m1$y.hat)
+
+m2 <- fDMA(y=ld.wti[1:20,1],x=ld.drivers[1:20,1:4],alpha=0.99,lambda=0.99,initvar=10)
 hit.ratio(y=ld.wti[1:20,1],y.hat=m2$y.hat,d=TRUE)
 }
 }
