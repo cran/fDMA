@@ -1,5 +1,6 @@
 \name{print.dma}
 \alias{print.dma}
+\alias{print}
 
 \title{Prints \code{dma} Object.}
 
@@ -13,7 +14,7 @@
 }
 
 \details{
-The function prints parameters of an argument \code{x}, Mean Squared Error (MSE) and Mean Absolute Error (MAE) from the estimated model. It also shows the number of observations, the number of models in averaging (selecting) procedure and the number of variables (including constant) used in the model. The function also shows forecast quality measures for alternative forecasting methods, i.e., naive forecast (see also \code{\link{altf}}) and, if computed, for Auto ARIMA \code{\link[forecast]{auto.arima}}.
+The function prints parameters of an argument \code{x}, Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE) from the estimated model. It also shows the number of observations, the number of models in averaging (selecting) procedure and the number of variables (including constant) used in the model. The number of models does not include the increase, if multiple \code{lambda} is used. The function also shows forecast quality measures for alternative forecasting methods, i.e., naive forecast (see also \code{\link{altf}}) and, if computed, for Auto ARIMA \code{\link[forecast]{auto.arima}}.
 }
 
 \examples{

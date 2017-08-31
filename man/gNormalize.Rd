@@ -28,9 +28,5 @@ gNormalize(rbind(c(0,1,2),c(1,2,3)))
 }
 
 \references{
-Koop, G., Onorante, L., 2014. Macroeconomic nowcasting using Google probabilities. 
-
-http://www.ecb.europa.eu/events/pdf/conferences/140407/
-
-OnoranteKoop_MacroeconomicNowcastingUsingGoogleProbabilities.pdf. 
+Koop, G., Onorante, L., 2014. Macroeconomic nowcasting using Google probabilities. \url{https://goo.gl/ATsBN9}
 }

@@ -5,10 +5,10 @@ summary.grid.dma <- function(object, ...)
    
    cat("MSE: ")
    cat("\n")
-   print(round(x$MSE,digits=4))
+   print(round(x$RMSE,digits=4))
    cat("\n")
-   cat("Indices of the model minimising MSE:")
-   temp <- which(x$MSE == min(x$MSE), arr.ind = TRUE)[1,]
+   cat("Indices of the model minimising RMSE:")
+   temp <- which(x$RMSE == min(x$RMSE), arr.ind = TRUE)[1,]
    names(temp) <- c("","")
    print(temp)
    cat("\n")

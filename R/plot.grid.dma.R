@@ -15,7 +15,7 @@ plot.grid.dma <- function(x, ...)
    
 plot1g <- function(x)
   {
-    d <- apply(x$MSE, 2, rev)
+    d <- apply(x$RMSE, 2, rev)
     d <- apply(d, 1, rev)
 
     filled.contour(as.numeric(rownames(d)),as.numeric(colnames(d)),d,col=colorRampPalette(c("blue","green"))(30),
@@ -202,14 +202,14 @@ plot4g <- function(x)
   
 if (x$models[[1]][[1]]$parameters[4]=="DMA")
       {
-        choices <- c("MSE", "MAE","posteriori inclusion probabilities - separate plots (files in working directory)",
+        choices <- c("RMSE", "MAE","posterior inclusion probabilities - separate plots (files in working directory)",
                      "expected coefficients - separate plots (files in working directory)" )
         pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
         switch(pick, plot1g(x), plot2g(x), plot3g(x), plot4g(x))
       }
 else
       {
-        choices <- c("MSE", "MAE",
+        choices <- c("RMSE", "MAE",
                      "expected coefficients - separate plots (files in working directory)" )
         pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
         switch(pick, plot1g(x), plot2g(x), plot4g(x))

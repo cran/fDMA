@@ -26,7 +26,7 @@ plot1 <- function(x)
     par(xpd=TRUE)
     plot(x$y.hat, type="l", col="blue", ylim=c(min(x$y,x$y.hat),max(x$y,x$y.hat)), axes=FALSE, xaxt='n', xlab="", ylab="", main="")
     par(new=TRUE)
-    plot(x$y, type="l", col="red", ylim=c(min(x$y,x$y.hat),max(x$y,x$y.hat)), xaxt='n', xlab="", ylab="", main="actual vs. predicted")
+    plot(x$y, type="l", col="red", ylim=c(min(x$y,x$y.hat),max(x$y,x$y.hat)), xaxt='n', xlab="", ylab="", main="actual and predicted")
     axis(1, at=inc, labels=labs)
     legend('bottom', inset=c(0,-0.45), c("actual","predicted"), lty=c(1,1), col=c("red","blue"), ncol=2) 
   }
@@ -250,23 +250,99 @@ plot7 <- function(x)
         }
       dev.off()
   }
+   
+plot8 <- function(x)
+  {
+    if (requireNamespace('gplots')) 
+      {
+        col <- rich.colors(ncol(x$post.mod), palette="temperature", rgb=FALSE, plot=FALSE)
+      } 
+    else 
+      {
+        warning("package >>gplots<< is required ::: a plot might be blurred")
+        col <- seq(1:ncol(x$post.mod))
+      }
+
+    inc <- vector()
+    inc[1] <- 1
+    for (i in 1:7)
+      {
+        inc[i+1] <- floor(i * nrow(x$post.incl)/7)
+      }
+    labs <- rownames(x$post.incl)[inc]
+
+    par(xpd=TRUE, fig = c(0, 1, 0, 1), oma = c(2, 1, 1, 1), mar = c(7, 1, 2, 1)) 
+    
+    for (i in 1:(ncol(x$post.incl)-1))
+      {
+        plot(x$post.mod[,i], type="l", col=col[i], ylim=c(0,1), axes=FALSE, xaxt='n', xlab="", ylab="", main="")
+        par(new=TRUE)
+      }
+    plot(x$post.mod[,i+1], type="l", col=col[i+1], ylim=c(0,1), axes=TRUE, xaxt='n', xlab="", ylab="", main="posterior model probabilities")
+    axis(1, at=inc, labels=labs)
+  }    
+     
+plot9 <- function(x)
+  {
+  
+    inc <- vector()
+    inc[1] <- 1
+    for (i in 1:7)
+      {
+        inc[i+1] <- floor(i * nrow(x$post.incl)/7)
+      }
+    labs <- rownames(x$post.incl)[inc]
+    par(xpd=FALSE)
+    plot(x$DOW.n.mods.t, type="l", col="blue", ylim=c(0,max(x$DOW.n.mods.t)), axes=TRUE, xaxt='n', xlab="", ylab="", main="number of models used in DMA")
+    axis(1, at=inc, labels=labs)
+  }
+  
+plot10 <- function(x)
+  {
+  
+    inc <- vector()
+    inc[1] <- 1
+    for (i in 1:7)
+      {
+        inc[i+1] <- floor(i * nrow(x$post.incl)/7)
+      }
+    labs <- rownames(x$post.incl)[inc]
+    par(xpd=FALSE)
+    plot(x$exp.lambda, type="l", col="blue", ylim=c(min(x$exp.lambda),max(x$exp.lambda)), axes=TRUE, xaxt='n', xlab="", ylab="", main="exp. lambda")
+    axis(1, at=inc, labels=labs)
+  }
+
 
     if (x$parameters[1,4] == "DMA")
       {
-        choices <- c("actual vs. predicted", "residuals","exp. var", "posteriori inclusion probabilities - one plot", 
-                     "posteriori inclusion probabilities - separate plots (files in working directory)",
-                     "expected coefficients - one plot", "expected coefficients - separate plots (files in working directory)" )
-        pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-        switch(pick, plot1(x), plot2(x), plot3(x), plot4(x), plot5(x), plot6(x), plot7(x))
+        if (anyNA(x$DOW.n.mods.t))
+          {
+            choices <- c("actual and predicted", "residuals","exp. var", "posterior inclusion probabilities - one plot", 
+                         "posterior inclusion probabilities - separate plots (files in working directory)",
+                         "expected coefficients - one plot", "expected coefficients - separate plots (files in working directory)", 
+                         "posterior model probabilities", "exp. lambda")
+            pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
+            switch(pick, plot1(x), plot2(x), plot3(x), plot4(x), plot5(x), plot6(x), plot7(x), plot8(x), plot10(x))
+          }
+        else
+          {
+            choices <- c("actual vs. predicted", "residuals","exp. var", "posterior inclusion probabilities - one plot", 
+                         "posterior inclusion probabilities - separate plots (files in working directory)",
+                         "expected coefficients - one plot", "expected coefficients - separate plots (files in working directory)", 
+                         "posterior model probabilities", "exp. lambda", "number of models used in DMA estimation")
+            pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
+            switch(pick, plot1(x), plot2(x), plot3(x), plot4(x), plot5(x), plot6(x), plot7(x), plot8(x), plot10(x), plot9(x))
+          }
       }
+    
     if (x$parameters[1,4] == "DMS" || x$parameters[1,4] == "MED")
       {
-        choices <- c("actual vs. predicted", "residuals","exp. var", "posteriori inclusion probabilities", 
-                     "expected coefficients - one plot", "expected coefficients - separate plots (files in working directory)" )
-        pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-        switch(pick, plot1(x), plot2(x), plot3(x), plot4(x), plot6(x), plot7(x))
+         choices <- c("actual vs. predicted", "residuals","exp. var", "posterior inclusion probabilities", 
+                      "expected coefficients - one plot", "expected coefficients - separate plots (files in working directory)",
+                      "exp. lambda")
+         pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
+         switch(pick, plot1(x), plot2(x), plot3(x), plot4(x), plot6(x), plot7(x), plot10(x))
       }
-
 
   }
   

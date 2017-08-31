@@ -1,7 +1,7 @@
 
 normalize <- function(data)
   {
-    ### x - a matrix or xts object 
+    ### data - a matrix or xts object 
 
     if (missing(data)) { stop("please, specify data") }
     if (! is.matrix(data)) 

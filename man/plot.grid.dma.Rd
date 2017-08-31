@@ -15,11 +15,11 @@
 \details{
 If \code{x} comes from estimation of Dynamic Model Averaging (DMA), after executing the command, the User is asked to choose
 
-1 - for plotting Mean Squared Error (MSE) for all estimated models,
+1 - for plotting Root Mean Squared Error (RMSE) for all estimated models,
 
 2 - for plotting Mean Absolute Error (MAE) for all estimated models,
 
-3 - for plotting posteriori inclusion probabilities (including constant) for all estimated models, the outcomes are saved in separate png files in the current working directory, and additionally, plots for different variables are collected into one big plot (also saved as a png file in the current working directory),
+3 - for plotting posterior inclusion probabilities (including constant) for all estimated models, the outcomes are saved in separate png files in the current working directory, and additionally, plots for different variables are collected into one big plot (also saved as a png file in the current working directory),
 
 4 - for plotting expected coefficients (including constant) for all estimated models, the outcomes are saved in separate png files in the current working directory, and additionally, plots for different variables are collected into one big plot (also saved as a png file in the current working directory).
 
@@ -29,7 +29,7 @@ Chosing 0 exits the \code{plot} command.
 
 If \code{x} comes from estimation of Dynamic Model Selection (DMS) or Median Probability Model (MED), after executing the command, the User is asked to choose
 
-1 - for plotting Mean Squared Error (MSE) for all estimated models,
+1 - for plotting Root Mean Squared Error (RMSE) for all estimated models,
 
 2 - for plotting Mean Absolute Error (MAE) for all estimated models,
 

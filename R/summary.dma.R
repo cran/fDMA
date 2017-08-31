@@ -10,11 +10,10 @@ summary.dma <- function(object, ...)
    max.probs <- round(apply(x$post.incl,2,max),digits=2)
    
    inc <- vector()
-   inc[1] <- round(1,digits=2)
    
-   for (i in 1:(length(probs)-1))
+   for (i in 1:length(probs))
     {
-      inc[i+1] <- round(length(x$post.incl[x$post.incl[,i]>0.5,i]) / nrow(x$post.incl),digits=2)
+      inc[i] <- round(length(x$post.incl[x$post.incl[,i]>0.5,i]) / nrow(x$post.incl),digits=2)
     }
    rm(i)
    
@@ -34,7 +33,7 @@ summary.dma <- function(object, ...)
    print(x$parameters)
    cat("\n")
    
-   err <- rbind(x$MSE,x$MAE)
+   err <- rbind(x$RMSE,x$MAE)
    colnames(err) <- c("model")
    err <- cbind(err,x$benchmarks)
    print(round(err,digits=4))
@@ -56,9 +55,9 @@ summary.dma <- function(object, ...)
    
    if (x$parameters[1,4] == "DMA") 
     { 
-      cat("* pip = posteriori inclusion prob.")
+      cat("* pip = posterior inclusion prob.")
       cat("\n")
-      cat("* inc = relative frequency of a variable posteriori inclusion prob. > 1/2")
+      cat("* inc = relative frequency of a variable posterior inclusion prob. > 1/2")
     }
    if (x$parameters[1,4] == "DMS" || x$parameters[1,4] == "MED")
     {

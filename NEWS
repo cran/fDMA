@@ -1,6 +1,46 @@
-fDMA v1.1 (Release date: 2017-07-11)
+fDMA ver. 2.0 (Release date: 2017-08-31)
 ==============
 
 Changes:
 
-* Fix of plot's menu.
+* Engle's ARCH test added. 
+* Forecast accuracy tests added. 
+* A few stationarity tests added. 
+* grid.roll.reg() (as "grid.roll.reg" object) for roll.reg() with various windows added. 
+* rec.reg() for recursive regression added. 
+* roll.reg() outcomes as an object of "reg" class. 
+* Akaike Information Criterion, Bayesian Information Criterion and Mean Squared Error added to roll.reg() outcomes. 
+* Regression coefficients and p-values for t-test for regression coefficients added to roll.reg() outcomes. 
+* roll.reg() fixed to work also with constant only. 
+* grid.tvp() (as "grid.tvp" object) for tvp() with various lambdas added. 
+* Predicitive density and estimated regression coefficients from all periods added to tvp() outcomes.
+* Exponentially weighted moving average variance updating added to tvp().
+* tvp() changed in order to work inside fDMA(), outcomes as "tvp" class.
+* altf4() for averaging over different windows sizes for a time-varying parameters rolling regression added. 
+* altf3() for averaging over different windows sizes for a rolling regression added. 
+* alft2() for model averaging alternative forecast added. 
+* More outcomes added to altf(). 
+* Direct comparision of a "dma" class object with alternative forecast added to altf(). 
+* Option to choose which alternative forecast will be computed by altf() added.
+* For forecast quality measure Mean Squared Error replaced by Root Mean Squared Error. 
+* Number of models used in Dynamic Occam's Window method and posterior model probabilities added to plot(). 
+* "inc" display in summary() of fDMA() outcomes fixed. 
+* Predicitive densities from the last period added to fDMA() outcomes.
+* fDMA() upgraded to work better with parallel computations on Windows machines.
+* Setting the initial values of variance for the models equations in fDMA() fixed. 
+* Estimation of models without constant fixed. 
+
+
+fDMA ver. 1.1 (Release date: 2017-07-11)
+==============
+
+Changes:
+
+* Plot's menu fixed.
+
+
+fDMA ver. 1.0 (Release date: 2017-07-09)
+==============
+
+* Initial release.
+

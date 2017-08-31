@@ -35,6 +35,8 @@ DOW=NULL,DOW.nmods=NULL,DOW.type=NULL,bm=NULL)
 \item{bm}{optional, \code{\link[base]{logical}}, indicate whether benchmark forecast should be computed, these benchmarks are naive forecast (all forecasts are set to be the value of the last observation) and Auto Arima \code{\link[forecast]{auto.arima}}, by default \code{bm=FALSE}}
 }
 
+\details{It is possible to use \code{\link[base]{numeric}} \code{\link[base]{vector}} for \code{lambda}. Its values are automatically ordered in descending order and if numbers are not unique they are reduced to become unique. If more than one value is given for \code{lambda}, then model state space, i.e., \code{mods.incl}, is expanded by considering all these models with given values of \code{lambda}. The outcomes are then ordered by columns in a way that first outcomes from models with first value of \code{lambda} are presented, then from models with second value of \code{lambda}, etc. (Raftery et al., 2010).}
+
 \value{class \code{dma} object, \code{\link[base]{list}} of
 \item{$y.hat}{forecasted values}
 \item{$post.incl}{posteriori inclusion probabilities for independent variables}
@@ -46,9 +48,12 @@ DOW=NULL,DOW.nmods=NULL,DOW.type=NULL,bm=NULL)
 \item{$exp.coef.}{expected values of regression coefficients}
 \item{$parameters}{parameters of the estimated model} 
 \item{$yhat.all.mods}{predictions from every sub-model used in estimations} 
-\item{$y}{independent variable}
-\item{$benchmarks}{Mean Squared Error and Mean Absolute Error of naive and auto ARIMA forecast}
+\item{$y}{\code{y}, dependent variable}
+\item{$benchmarks}{Root Mean Squared Error and Mean Absolute Error of naive and auto ARIMA forecast}
 \item{$DOW.init.mods}{models initially selected to Dynamic Occam's Window, if this method has been selected}
+\item{$DOW.n.mods.t}{number of models used in Dynamic Model Averaging at time \eqn{t}, if Dynamic Occam's Window method has been selected}
+\item{$p.dens.}{predicitive densities from the last period of all sub-models used in estimations}
+\item{$exp.lambda}{expected values of \code{lambda} parameter}
 }
 
 \examples{
@@ -93,6 +98,9 @@ m6 <- fDMA(y=ld.wti,x=ld.drivers,alpha=0.99,lambda=0.90,initvar=10,mods.incl=mds
 s <- ld.drivers[1:20,1:4]
 mod6 <- fDMA(y=ld.wti[1:20,1],x=s,alpha=0.99,lambda=0.90,initvar=10,mods.incl=mds[1:5,1:5])
 }
+\dontrun{
+mod7 <- fDMA(y=ld.wti,x=ld.drivers,alpha=0.99,lambda=c(0.99,0.95,0.90),initvar=10)
+}
 }
 
 \source{
@@ -106,14 +114,12 @@ Eicher, T. S., Papageorgiou, C., Raftery, A. E., 2011. Default priors and predic
 
 Koop, G., Korobilis, D., 2012. Forecasting inflation using Dynamic Model Averaging. \emph{International Economic Review} \bold{53}, 867--886.
 
-Koop, G., Onorante, L., 2014. Macroeconomic nowcasting using Google probabilities. 
-
-http://www.ecb.europa.eu/events/pdf/conferences/140407/
-
-OnoranteKoop_MacroeconomicNowcastingUsingGoogleProbabilities.pdf.
+Koop, G., Onorante, L., 2014. Macroeconomic nowcasting using Google probabilities. \url{https://goo.gl/ATsBN9}
 
 Mitchell, T. J., Beauchamp, J. J., 1988. Bayesian variable selection in linear regression (with discussion). \emph{Journal of the American Statistical Association} \bold{83}, 1023--1036.
 
 Onorante, L., Raftery, A. E., 2016. Dynamic model averaging in large model spaces using
 dynamic Occam's window. \emph{European Economic Review} \bold{81}, 2--14.
 }
+
+\seealso{\code{\link{grid.DMA}}, \code{\link{print.dma}}, \code{\link{summary.dma}}, \code{\link{plot.dma}}.}

@@ -1,7 +1,7 @@
 
 gNormalize <- function(data)
   {
-    ### x - a matrix or xts object of, for example, Google Trends
+    ### data - a matrix or xts object of, for example, Google Trends
 
     if (missing(data)) { stop("please, specify data") }
     if (! is.matrix(data)) 

@@ -1,5 +1,6 @@
 \name{plot.dma}
 \alias{plot.dma}
+\alias{plot}
 
 \title{Plots Selected Outcomes from \code{\link{fDMA}} Function.}
 
@@ -15,19 +16,26 @@
 \details{
 If \code{x} comes from estimation of Dynamic Model Averaging (DMA), after executing the command, the User is asked to choose
 
-1 - for plotting actual vs. predicted values,
+1 - for plotting actual and predicted values,
 
 2 - for plotting residuals,
 
 3 - for plotting the expected number of variables (including constant),
 
-4 - for plotting posteriori inclusion probabilities (including constant) on one plot,
+4 - for plotting posterior inclusion probabilities (including constant) on one plot,
 
-5 - for plotting posteriori inclusion probabilities (including constant) in separate png files, saved in the current working directory, and moreover, to paste them into one big plot (also saved as a png file in the current working directory),
+5 - for plotting posterior inclusion probabilities (including constant) in separate png files, saved in the current working directory, and moreover, to paste them into one big plot (also saved as a png file in the current working directory),
 
 6 - for plotting expected coefficients (including constant) on one plot,
 
-7 - for plotting expected coefficients (including constant) in separate png files, saved in the current working directory, and moreover, to paste them into one big plot (also saved as a png file in the current working directory).
+7 - for plotting expected coefficients (including constant) in separate png files, saved in the current working directory, and moreover, to paste them into one big plot (also saved as a png file in the current working directory),
+
+8 - for plotting posterior model probabilities, 
+
+9 - for plotting the expected value of \code{lambda},
+
+10 - for plotting the number of models used in Dynamic Model Averaging, if Dynamic Occam's Window method has been selected.
+
 
 Chosing 0 exits the \code{plot} command.
 
@@ -35,7 +43,7 @@ Chosing 0 exits the \code{plot} command.
 
 If {x} comes from estimation of Dynamic Model Selection (DMS) or Median Probability Model (MED), after executing \code{plot} the User is asked to choose
 
-1 - for plotting actual vs. predicted values,
+1 - for plotting actual and predicted values,
 
 2 - for plotting residuals,
 
@@ -45,7 +53,10 @@ If {x} comes from estimation of Dynamic Model Selection (DMS) or Median Probabil
 
 5 - for plotting expected coefficients (including constant) on one plot,
 
-6 - for plotting expected coefficients (including constant) in separate png files, saved in the current working directory, and moreover, to paste them into one big plot (also saved as a png file in the current working directory).
+6 - for plotting expected coefficients (including constant) in separate png files, saved in the current working directory, and moreover, to paste them into one big plot (also saved as a png file in the current working directory),
+
+7 - for plotting the expected value of \code{lambda} (only for DMS).
+
 
 Chosing 0 exits the \code{plot} command.
 }

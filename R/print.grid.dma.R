@@ -1,9 +1,9 @@
 
 print.grid.dma <- function(x, ...)
   {
-   cat("MSE: ")
+   cat("RMSE: ")
    cat("\n")
-   print(round(x$MSE,digits=4))
+   print(round(x$RMSE,digits=4))
    cat("\n")
    cat("\n")
    cat("MAE: ")

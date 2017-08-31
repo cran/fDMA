@@ -4,7 +4,7 @@ grid.DMA <- function (y,x,grid.alpha,grid.lambda,initvar,
                       m.prior=NULL,mods.incl=NULL,DOW=NULL,DOW.nmods=NULL,DOW.type=NULL)
 {
 
-### this is a wrapper of fDMA
+### this is a wrapper of fDMA() 
 
 ### "foreach", "doParallel", "stats", "forecast" and "xts" packages are required
 
@@ -98,13 +98,13 @@ for (i in 1:length(grid.alpha))
   {
     for (j in 1:length(grid.lambda))
       {
-        mse[j,i] <- gDMA[[i]][[j]]$MSE
+        mse[j,i] <- gDMA[[i]][[j]]$RMSE
         mae[j,i] <- gDMA[[i]][[j]]$MAE
       }
   }
 
 temp <- list(gDMA,mse,mae)
-names(temp) <- c("models","MSE","MAE")
+names(temp) <- c("models","RMSE","MAE")
 class(temp) <- "grid.dma"
 return(temp)
 

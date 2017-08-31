@@ -13,7 +13,7 @@
 }
 
 \details{
-The function prints Mean Squared Error (MSE) and Mean Absolute Error (MAE) for all estimated models.
+The function prints Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE) for all estimated models.
 }
 
 \examples{

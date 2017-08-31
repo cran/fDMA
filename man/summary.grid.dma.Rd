@@ -15,9 +15,7 @@
 \details{
 The function produces the outcomes as \code{\link{print.grid.dma}}.
 
-Additionally:
-
-The function shows Mean Squared Error (MSE) and Mean Absolute Error (MAE) for all estimated models. Additionally, it finds the indices for a model minimizing Mean Squared Error (MSE) and for a model minimizing Mean Absolute Error (MAE). 
+Additionally, it finds the indices for a model minimizing Root Mean Squared Error (RMSE) and for a model minimizing Mean Absolute Error (MAE). 
 }
 
 \examples{

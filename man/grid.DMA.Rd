@@ -39,7 +39,7 @@ mods.incl=NULL,DOW=NULL,DOW.nmods=NULL,DOW.type=NULL)
 \value{an object of class \code{grid.dma}, \code{\link[base]{list}} of
 
 \item{$models}{\code{\link[base]{list}} of \code{\link[base]{list}} of models}
-\item{$MSE}{\code{\link[base]{matrix}} with Mean Squared Error (MSE) for all estimated models}
+\item{$RMSE}{\code{\link[base]{matrix}} with Root Mean Squared Error (RMSE) for all estimated models}
 \item{$MAE}{\code{\link[base]{matrix}} with Mean Absolute Error (MAE) for all estimated models}
 }
 
@@ -62,3 +62,5 @@ g <- grid.DMA(y=ld.wti[1:20,1],x=ld.drivers[1:20,1:4],grid.alpha=gra,grid.lambda
 # extract model with alpha=0.97 and lambda=0.95
 model <- g$models[[3]][[2]]
 }
+
+\seealso{\code{\link{print.grid.dma}}, \code{\link{summary.grid.dma}}, \code{\link{plot.grid.dma}}.}

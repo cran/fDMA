@@ -25,17 +25,16 @@
 
 \source{The data are provided by CBOE, Federal Reserve Bank of St. Louis, MSCI, U.S. Energy Information Administration and World Steel Association. 
 
-\url{http://www.cboe.com/products/vix-index-volatility/vix-options-and-futures/vix-index/vix-historical-
+\url{https://www.cboe.com/products/vix-index-volatility/vix-options-and-futures/vix-index/vix-historical-
 data}
 
-http://www.eia.gov
+\url{https://www.eia.gov}
 
-\url{http://fred.stlouisfed.org}
+\url{https://fred.stlouisfed.org}
 
-\url{http://www.msci.com/end-of-day-data-search}
+\url{https://goo.gl/P1WZXb}
 
-http://www.worldsteel.org/steel-by-topic/statistics/Statistics-monthly-crude-steel-and-iron-data-
-/steel-archive.html
+\url{https://www.msci.com/end-of-day-data-search}
 }
 
 \examples{

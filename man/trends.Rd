@@ -24,7 +24,7 @@
 
 \source{The data are provided by Google. 
 
-\url{http://trends.google.com/trends}
+\url{https://trends.google.com/trends}
 }
 
 \examples{
