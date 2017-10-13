@@ -15,24 +15,30 @@ plot.grid.dma <- function(x, ...)
    
 plot1g <- function(x)
   {
-    d <- apply(x$RMSE, 2, rev)
-    d <- apply(d, 1, rev)
+    if ( ((ncol(x$RMSE)>=2) && (nrow(x$RMSE)>=2)) && is.na(charmatch("c",paste(rownames(x$RMSE), collapse = ""))) )
+      {
+        d <- apply(x$RMSE, 2, rev)
+        d <- apply(d, 1, rev)
 
-    filled.contour(as.numeric(rownames(d)),as.numeric(colnames(d)),d,col=colorRampPalette(c("blue","green"))(30),
-    xlab=expression(paste(alpha)),ylab=expression(paste(lambda)))
-     
-    rm(d)
+        filled.contour(as.numeric(rownames(d)),as.numeric(colnames(d)),d,col=colorRampPalette(c("blue","green"))(30),
+        xlab=expression(paste(alpha)),ylab=expression(paste(lambda)))
+         
+        rm(d)
+      }
   }
  
 plot2g <- function(x)
   {
-    d <- apply(x$MAE, 2, rev)
-    d <- apply(d, 1, rev)
+    if ( ((ncol(x$RMSE)>=2) && (nrow(x$RMSE)>=2)) && is.na(charmatch("c",paste(rownames(x$RMSE), collapse = ""))) )
+      {
+        d <- apply(x$MAE, 2, rev)
+        d <- apply(d, 1, rev)
 
-    filled.contour(as.numeric(rownames(d)),as.numeric(colnames(d)),d,col=colorRampPalette(c("blue","green"))(30),
-    xlab=expression(paste(alpha)),ylab=expression(paste(lambda)))
-     
-    rm(d)
+        filled.contour(as.numeric(rownames(d)),as.numeric(colnames(d)),d,col=colorRampPalette(c("blue","green"))(30),
+        xlab=expression(paste(alpha)),ylab=expression(paste(lambda)))
+         
+        rm(d)
+      }
   }
  
 plot3g <- function(x)

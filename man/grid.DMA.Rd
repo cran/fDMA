@@ -12,14 +12,14 @@ This function is a wrapper of \code{\link{fDMA}}.
 \usage{
 grid.DMA(y,x,grid.alpha,grid.lambda,initvar,W=NULL,initial.period=NULL,V.meth=NULL,
 kappa=NULL,gprob=NULL,omega=NULL,model=NULL,parallel.grid=NULL,m.prior=NULL,
-mods.incl=NULL,DOW=NULL,DOW.nmods=NULL,DOW.type=NULL)
+mods.incl=NULL,DOW=NULL,DOW.nmods=NULL,DOW.type=NULL,DOW.limit.nmods=NULL,bm=NULL)
 }
 
 \arguments{
 \item{y}{see \code{\link{fDMA}}}
 \item{x}{see \code{\link{fDMA}}}
 \item{grid.alpha}{a numeric \code{\link[base]{vector}} of different values of \code{alpha}}
-\item{grid.lambda}{a numeric \code{\link[base]{vector}} of different values of \code{lambda}}
+\item{grid.lambda}{a numeric \code{\link[base]{vector}} of different values of \code{lambda} or a \code{\link[base]{list}} of numeric vectors for multiple \code{lambda} in one model (see \code{\link{fDMA}})}
 \item{initvar}{see \code{\link{fDMA}}}
 \item{W}{see \code{\link{fDMA}}}
 \item{initial.period}{see \code{\link{fDMA}}}
@@ -34,6 +34,8 @@ mods.incl=NULL,DOW=NULL,DOW.nmods=NULL,DOW.type=NULL)
 \item{DOW}{see \code{\link{fDMA}}}
 \item{DOW.nmods}{see \code{\link{fDMA}}}
 \item{DOW.type}{see \code{\link{fDMA}}}
+\item{DOW.limit.nmods}{see \code{\link{fDMA}}}
+\item{bm}{see \code{\link{fDMA}}}
 }
 
 \value{an object of class \code{grid.dma}, \code{\link[base]{list}} of
@@ -52,7 +54,7 @@ ld.drivers <- (diff(log(drivers)))[-1,]
 \dontrun{
 gra <- c(0.99,0.98,0.97)
 grl <- c(0.99,0.95)
-g <- grid.DMA(y=ld.wti,x=ld.drivers,grid.alpha=gra,grid.lambda=grl,initvar=10)
+g1 <- grid.DMA(y=ld.wti,x=ld.drivers,grid.alpha=gra,grid.lambda=grl,initvar=10)
 }
 \dontshow{
 gra <- c(0.99,0.98,0.97)
@@ -61,6 +63,13 @@ g <- grid.DMA(y=ld.wti[1:20,1],x=ld.drivers[1:20,1:4],grid.alpha=gra,grid.lambda
 }
 # extract model with alpha=0.97 and lambda=0.95
 model <- g$models[[3]][[2]]
+
+# models with various multiple lambdas
+\dontrun{
+gra <- c(0.99,0.98,0.97)
+grl <- list(c(0.99,0.95,0.90),c(0.99,0.98,0.97,0.96,0.95))
+g2 <- grid.DMA(y=ld.wti,x=ld.drivers,grid.alpha=gra,grid.lambda=grl,initvar=10)
+}
 }
 
 \seealso{\code{\link{print.grid.dma}}, \code{\link{summary.grid.dma}}, \code{\link{plot.grid.dma}}.}

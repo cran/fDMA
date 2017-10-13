@@ -306,12 +306,150 @@ plot3g <- function(x)
   }
 
 
+plot4g <- function(x)
+  {
+    
+    if (requireNamespace('png')) 
+      {
+      } 
+    else 
+      {
+        stop("package >>png<< is required")
+      }
+
+    if (requireNamespace('gplots')) 
+      { 
+        col <- rich.colors(nmods, palette="temperature", rgb=FALSE, plot=FALSE) 
+      } 
+    else 
+      {
+        warning("package >>gplots<< is required ::: a plot might be blurred")
+        col <- seq(1:nmods)
+      }
+
+    names <- colnames(x$coeff.[[1]])
+    
+    inc <- vector()
+    inc[1] <- 1
+    for (i in 1:7)
+      {
+        inc[i+1] <- floor(i * length(x$y)/7)
+      }
+    labs <- rownames(x$y)[inc]
+    
+    width <-  480
+    height <- 300
+    
+    for (j in 1:(length(names)))  
+      {
+        mypath <- file.path(getwd(), paste("altf2_rvi_", j, ".png", sep = ""))
+        png(filename = mypath, height = height)
+        par(xpd=TRUE, fig = c(0, 1, 0, 1), oma = c(2, 1, 1, 1), mar = c(5, 1, 2, 1))
+        plot(index(x$y), rep(NA,length(index(x$y))), lty=2, type="l", col="white", ylim=c(0,1), 
+             axes=TRUE, xaxt='n', xlab="", ylab="", main=names[j])
+        par(new=TRUE)
+        for (ii in 1:nmods)
+          {
+             if (names(x$rel.var.imp.)[ii]=="av. OLS")
+              {
+                 plot(index(x$y),rep(x$rel.var.imp.[[ii]][,j],length(x$y)),col=col[ii],ylim=c(0,1),
+                      axes=FALSE, xaxt='n', xlab='', ylab='', type="l", main='')
+              }
+            else
+              {
+                 plot(index(x$y),x$rel.var.imp.[[ii]][,j],col=col[ii],ylim=c(0,1),
+                      axes=FALSE, xaxt='n', xlab='', ylab='', type="l", main='')
+              }
+            par(new=TRUE)
+          }
+        axis(1, at=inc, labels=labs)
+        legend('bottom', inset=c(0,-0.40), names(x$coeff.), lty=rep(1,ii), col=col[1:ii], ncol=4, cex=0.9) 
+
+        dev.off()
+      }
+
+
+     img <- list()
+     for (i in 1:(length(names)))
+      {
+        mypath <- file.path(getwd(), paste("altf2_rvi_", i, ".png", sep = ""))
+        img[[i]] <- readPNG(mypath)
+      }
+
+      png(filename="altf2_rvi_all.png", width = 2 * width, height = height * ceiling((length(names))/2))
+      par(mar=c(0,0,0,0))
+      layout(matrix(1:(2*ceiling((length(names))/2)), ncol=2, byrow=TRUE))
+      for(i in 1:(length(names))) 
+        {
+          plot(NA,xlim=0:1,ylim=0:1,xaxt="n",yaxt="n",bty="n")
+          rasterImage(img[[i]],0,0,1,1) 
+        }
+      dev.off()
+  }
+
+
+plot5g <- function(x)
+  {
+    
+    if (requireNamespace('png')) 
+      {
+      } 
+    else 
+      {
+        stop("package >>png<< is required")
+      }
+
+    if (requireNamespace('gplots')) 
+      { 
+        col <- rich.colors(nmods, palette="temperature", rgb=FALSE, plot=FALSE) 
+      } 
+    else 
+      {
+        warning("package >>gplots<< is required ::: a plot might be blurred")
+        col <- seq(1:nmods)
+      }
+
+    names <- names(x$weights)
+    
+    inc <- vector()
+    inc[1] <- 1
+    for (i in 1:7)
+      {
+        inc[i+1] <- floor(i * length(x$y)/7)
+      }
+    labs <- rownames(x$y)[inc]
+    
+    par(xpd=TRUE, fig = c(0, 1, 0, 1), oma = c(2, 1, 1, 1), mar = c(7, 1, 2, 1))
+    
+    for (j in 1:(length(names)))  
+      {
+        if (names(x$exp.var.)[j]=="av. OLS")
+          {
+            plot(index(x$y),rep(as.vector(x$exp.var.[[j]]),length(x$y)),col=col[j],ylim=c(0,ncol(x$coeff.[[1]])),
+                 axes=TRUE, xaxt='n', xlab='', ylab='', type="l", main='exp. var.')
+            par(new=TRUE)
+          }
+        else
+          {
+            plot(index(x$y),as.vector(x$exp.var.[[j]]),col=col[j],ylim=c(0,ncol(x$coeff.[[1]])),
+                 axes=TRUE, xaxt='n', xlab='', ylab='', type="l", main='exp. var.')
+            par(new=TRUE)
+          }
+        axis(1, at=inc, labels=labs)
+        legend('bottom', inset=c(0,-0.45), names(x$coeff.), lty=rep(1,j), col=col[1:j], ncol=4, cex=0.9) 
+      }
+
+  }
+
+
 
         choices <- c("expected coefficients - separate plots (files in working directory)",
                      "p-values for t-tests - separate plots (files in working directory)",
-                     "models' weights - separate plots (files in working directory)")
+                     "models' weights - separate plots (files in working directory)",
+                     "relative variable importance (files in working directory)",
+                     "expected number of variables (incl. constant)")
         pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-        switch(pick, plot1g(x), plot2g(x), plot3g(x))
+        switch(pick, plot1g(x), plot2g(x), plot3g(x), plot4g(x), plot5g(x))
 
  
   }

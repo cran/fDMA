@@ -1,7 +1,7 @@
 
 fDMA <- function (y,x,alpha,lambda,initvar,W=NULL,initial.period=NULL,V.meth=NULL,kappa=NULL,
                   gprob=NULL,omega=NULL,model=NULL,parallel=NULL,m.prior=NULL,mods.incl=NULL,
-                  DOW=NULL,DOW.nmods=NULL,DOW.type=NULL,bm=NULL)
+                  DOW=NULL,DOW.nmods=NULL,DOW.type=NULL,DOW.limit.nmods=NULL,progress.info=NULL,bm=NULL)
 {
 
 ### requires "forecast", "parallel", "stats" and "xts" packages
@@ -56,8 +56,7 @@ fDMA <- function (y,x,alpha,lambda,initvar,W=NULL,initial.period=NULL,V.meth=NUL
 ### DOW - a threshold for Dynamic Occam's Window (Onorante and Raftery, 2016),
 ###       should be a number between 0 and 1,
 ###       if DOW = 0, then no Dynamic Occam's Window is applied,
-###       by default DOW = 0,
-###       Dynamic Occam's Window can be applied only if all possible models with a constant are used 
+###       by default DOW = 0
 
 ### DOW.nmods - initial number of models for Dynamic Occam's Window,
 ###             should be less than the number of all possible models and larger than or equal to 2,
@@ -72,6 +71,11 @@ fDMA <- function (y,x,alpha,lambda,initvar,W=NULL,initial.period=NULL,V.meth=NUL
 ### bm - indicate whether benchmark forecast should be computed,
 ###      by default bm = FALSE
 
+### DOW.limit.nmods - the limit of number of models used in Dynamic Occam's Window
+
+### progress.info - applicable only if Dynamic Occam's Window is used,
+###                 if progress.info = TRUE number of round and number of models are printed,
+###                 by default progress.info = FALSE 
 
 
 ###################################### checking initial parameters 
@@ -190,10 +194,9 @@ if (!is.null(DOW))
   {
     threshold <- DOW
   }
-if (!is.null(DOW) && all.mods == FALSE) { stop("Dynamic Occam's Window can be applied only if all possible models with a constant are used, i.e, mods.incl is not specified") }
 if (!is.null(DOW) && is.null(DOW.nmods)) { DOW.nmods <- 0 }
 if (!is.null(DOW.nmods) && !is.numeric(DOW.nmods)) { stop("DOW.nmods must be a number") }
-if (!is.null(DOW.nmods) && ((DOW.nmods < 2 && !DOW.nmods == 0) || DOW.nmods >= nrow(mods.incl))) { stop("DOW.nmods must be greater than or equal to 2, and less than the number of all possible models") }
+if (!is.null(DOW.nmods) && ((DOW.nmods < 2 && !DOW.nmods == 0) || DOW.nmods > nrow(mods.incl))) { stop("DOW.nmods must be greater than or equal to 2, and less than or equal to the number of all possible models") }
 if (is.null(DOW.type)) { DOW.type <- "r" }
 if (! DOW.type %in% c("r","e")) { stop("please, specify correct DOW.type: ''r'', or ''e''") }
 if (!is.null(DOW) && DOW.type %in% c("r","e") && !model == "dma") { stop("Dynamic Occam's Window can be applied only to Dynamic Model Averaging, i.e., model must be ''dma''") }
@@ -210,10 +213,14 @@ if (bm == TRUE)
         warning('package >>forecast<< should be loaded, otherwise auto ARIMA forecast will not be computed')
       }
   }
+if (!is.null(DOW.limit.nmods) && !is.numeric(DOW.limit.nmods)) { stop("DOW.limit.nmods must be a number") }
+if (!is.null(DOW.limit.nmods) && DOW.limit.nmods < 2) { stop("DOW.limit.nmods must be greater than or equal to 2") }
 if (requireNamespace('xts')) { } else { warning('package >>xts<< should be loaded, otherwise computations might be slower') }
 rm(all.mods)
 if (length(lambda)>1 && model=="med") stop("multiple lambdas cannot be used for Median Probability Model")
 if (length(lambda)>1 && !threshold==0) stop("multiple lambdas cannot be used with Dynamic Occam's Window")
+if (is.null(progress.info)) { progress.info <- FALSE }
+if (! is.logical(progress.info)) { stop("progress.info must be logical, i.e., TRUE or FALSE") }
 
 lambda <- unique(lambda)
 lambda <- sort(lambda, decreasing=TRUE)
@@ -321,13 +328,27 @@ f.basicDMA <- function (y,x,alpha,lambda,initvar,W=NULL,kappa=NULL,
       ### modification as in Koop and Onorante (2014)
     f.pi2.g <- function(i)
       {
-        i.old <- i 
-        i <- i.old %% nrow(mods.incl)
-        if (i==0) { i <- nrow(mods.incl) }
-
-        p1 <- gprob[t,which(mods.incl[i,-1,drop=FALSE]==1)]
-        p2 <- 1-gprob[t,which(mods.incl[i,-1,drop=FALSE]==0)]
-        return( omega * ( ((pi1[i.old])^alpha + c) / pi1sum ) + (1-omega)*prod(p1)*prod(p2)/len )
+        if (length(which(mods.incl[i,-1,drop=FALSE]==1))>0)
+          {
+            p1 <- gprob[t,which(mods.incl[i,-1,drop=FALSE]==1)]
+          }
+        else
+          {
+            p1 <- 1
+          }
+        if (length(which(mods.incl[i,-1,drop=FALSE]==0))>0)
+          {
+            p2 <- 1-gprob[t,which(mods.incl[i,-1,drop=FALSE]==0)]
+          }
+        else
+          {
+            p2 <- 1
+          }
+        p1 <- prod(p1)
+        p2 <- prod(p2)
+        if (p1==0) { p1 <- 0.0001 }
+        if (p2==0) { p2 <- 0.0001 }
+        return( p1*p2 )
       }
 
     f.pdens <- function(i)
@@ -359,9 +380,16 @@ f.basicDMA <- function (y,x,alpha,lambda,initvar,W=NULL,kappa=NULL,
           }
         else
           {
+            pi2.g <- unlist(lapply(seq(nrow(mods.incl)),f.pi2.g))
+            pi2.g <- pi2.g / sum(pi2.g)
+            pi2.g <- pi2.g / len
+            pi2.g <- rep(pi2.g,len)
+          
             pi1sum <- sum((pi1)^alpha) + c
-            pi2 <- unlist(lapply(seq(len*nrow(mods.incl)),f.pi2.g))
-            rm(pi1sum)
+            
+            pi2 <- omega * ( (pi1^alpha + c) / pi1sum ) + (1-omega) * pi2.g
+            
+            rm(pi1sum,pi2.g)
           }
       
         if (model == "dma")
@@ -389,7 +417,7 @@ f.basicDMA <- function (y,x,alpha,lambda,initvar,W=NULL,kappa=NULL,
           }
 
         yhat <- unlist(lapply(seq(len*nrow(mods.incl)),f.yhat))
-    
+
         if (model == "dma") 
           { 
             yhat.all <- rbind(yhat.all,yhat) 
@@ -421,7 +449,6 @@ f.basicDMA <- function (y,x,alpha,lambda,initvar,W=NULL,kappa=NULL,
         pdens <- unlist(lapply(seq(len*nrow(mods.incl)),f.pdens))
 
         pi1 <- (pi2 * pdens) / as.numeric(crossprod(pi2,pdens))
-        
       }
 
     ######################################################## output
@@ -443,7 +470,7 @@ f.basicDMA <- function (y,x,alpha,lambda,initvar,W=NULL,kappa=NULL,
         post <- lapply(1:len,f.split)
         post <- Reduce('+', post)
         post <- as.matrix(post)
-        
+
         return(list(post,yhat.all,thetas.exp,ydma,pdens, NA   ,pi1,thetas,yhat,pi2,exp.lambda))
       }
     if (model == "dms" || model == "med")
@@ -470,10 +497,9 @@ else
     ##############################################################
       
     ydma.dow <- vector()
-    mods.incl.dow <- mods.incl
-    post.dow <- as.vector(rep.int(0, nrow(mods.incl.dow)))
-    yhat.all.dow <- as.vector(rep.int(NA,nrow(mods.incl.dow)))
-    thetas.exp.dow <- as.vector(rep.int(0,ncol(mods.incl.dow)))
+    post.dow <- as.vector(rep.int(0, ncol(mods.incl)))
+    thetas.exp.dow <- as.vector(rep.int(0,ncol(mods.incl)))
+    exp.var.dow <- vector()
 
       ### selection of initial models
     
@@ -492,13 +518,24 @@ else
     for (T in 1:nrow(x)) 
       {
         nms[T] <- nrow(mods.incl) 
-        T.dma <- f.basicDMA(y=y[1:T,,drop=FALSE],x=x[1:T,,drop=FALSE],alpha=alpha,lambda=lambda,initvar=initvar,W=W,kappa=kappa,
-                            gprob=gprob,omega=omega,model=model,parallel=parallel,
-                            m.prior=m.prior,mods.incl=mods.incl)
-
-        mods.ind <- duplicated(rbind(mods.incl,mods.incl.dow))[(nrow(mods.incl)+1):(nrow(mods.incl)+nrow(mods.incl.dow))]
-        pi2.dow <- as.vector(rep.int(0, nrow(mods.incl.dow)))
         
+        if (progress.info==TRUE)
+          {
+            print(paste('round:',T))
+            print(paste('models:',nms[T]))
+          }
+        
+        if (parallel==TRUE && nms[T]>2^10)
+          {
+            dopar <- TRUE
+          }
+        else
+          {
+            dopar <- FALSE
+          }
+        T.dma <- f.basicDMA(y=y[1:T,,drop=FALSE],x=x[1:T,,drop=FALSE],alpha=alpha,lambda=lambda,initvar=initvar,W=W,kappa=kappa,
+                            gprob=gprob,omega=omega,model=model,parallel=dopar,
+                            m.prior=m.prior,mods.incl=mods.incl)
         yhat <- T.dma[[9]]
         thetas <- T.dma[[8]]
         pi1 <- T.dma[[7]]
@@ -508,16 +545,10 @@ else
             pi2.temp <- T.dma[[10]]
             pi2.temp[which(pi1<(threshold*max(pi1)))] <- 0
             pi2.temp <- pi2.temp / sum(pi2.temp)
-            
             ydma.dow[T] <- crossprod(pi2.temp,yhat)
             
-            pi2.dow[mods.ind] <- pi2.temp
-            
-            post.dow <- rbind(post.dow,pi2.dow)
-            
-            yhat.all.dow.temp <- as.vector(rep.int(NA, nrow(mods.incl.dow)))
-            yhat.all.dow.temp[which(pi2.temp>0)] <- yhat[which(pi2.temp>0)] 
-            yhat.all.dow <- rbind(yhat.all.dow,yhat.all.dow.temp)
+            post.dow <- rbind(post.dow,pi2.temp %*% mods.incl)
+            exp.var.dow[T] <- pi2.temp %*% (as.matrix(apply(mods.incl,1,sum))) 
             
             thetas <- pi2.temp %*% thetas
             thetas.exp.dow <- rbind(thetas.exp.dow,thetas) 
@@ -528,23 +559,30 @@ else
           {
             ydma.dow[T] <- yhat 
             
-            pi2.dow[mods.ind] <- T.dma[[10]]
-         
-            post.dow <- rbind(post.dow,pi2.dow)
-
-            yhat.all.dow.temp <- as.vector(rep.int(NA, nrow(mods.incl.dow)))
-            yhat.all.dow.temp[mods.ind] <- yhat
-            yhat.all.dow <- rbind(yhat.all.dow,yhat.all.dow.temp)
+            post.dow <- rbind(post.dow,T.dma[[10]] %*% mods.incl)
+            exp.var.dow[T] <- T.dma[[10]] %*% (as.matrix(apply(mods.incl,1,sum)))
 
             thetas <- T.dma[[10]] %*% thetas
             thetas.exp.dow <- rbind(thetas.exp.dow,thetas)   
           }
 
-        rm(mods.ind,yhat.all.dow.temp)
-
           ### models' space update
 
-        mod.red <- mods.incl[which(pi1>=(threshold*max(pi1))),]
+        mod.red <- mods.incl[which(pi1>=(threshold*max(pi1))),,drop=FALSE]
+        
+        if (!is.matrix(mod.red)) { mod.red <- t(as.matrix(mod.red)) }
+
+        if (!is.null(DOW.limit.nmods)) 
+          {
+            if (nrow(mod.red)>DOW.limit.nmods)
+              {
+                ind.red <- sort(pi1,decreasing=TRUE,index.return=TRUE)$ix
+                ind.red <- ind.red[1:DOW.limit.nmods]
+                mod.red <- mods.incl[ind.red,,drop=FALSE]
+                rm(ind.red)
+              }
+          }
+        
         if (!is.matrix(mod.red)) { mod.red <- t(as.matrix(mod.red)) }
 
         mod.exp <- mod.red
@@ -559,17 +597,16 @@ else
             mod.exp <- unique(mod.exp)
           }
 
-        mods.incl <- mod.exp
+        if (T<nrow(x)) { mods.incl <- mod.exp }
 
         rm(mod.red,mod.exp,mod.exp.temp)
       }
 
-    mods.incl <- mods.incl.dow
-    
-    comput <- list(post.dow[-1,,drop=FALSE],yhat.all.dow[-1,,drop=FALSE],thetas.exp.dow[-1,,drop=FALSE],ydma.dow,T.dma[[5]])
+    comput <- list(post.dow[-1,,drop=FALSE],c("not computed"),thetas.exp.dow[-1,,drop=FALSE],ydma.dow,T.dma[[5]])
     comput[[11]] <- T.dma[[11]]
+    comput[[12]] <- exp.var.dow
 
-    rm(post.dow,pi2.dow,ydma.dow,mods.incl.dow,yhat.all.dow,thetas.exp.dow)      
+    rm(post.dow,ydma.dow,thetas.exp.dow)      
   }
       
 ############################################################ output
@@ -588,11 +625,15 @@ else
 
 if (model == "dma")
   {
-    post <- comput[[1]]
+    if (threshold==0) { post <- comput[[1]] }
       
     yhat.all <- comput[[2]]
-    colnames(yhat.all) <- seq(1,length(lambda)*nrow(mods.incl)) 
-    rownames(yhat.all) <- rownames(x) 
+    
+    if (threshold==0)
+      {
+        colnames(yhat.all) <- seq(1,length(lambda)*nrow(mods.incl)) 
+        rownames(yhat.all) <- rownames(x) 
+      }
   }
 
 thetas.exp <- as.matrix(comput[[3]])
@@ -600,7 +641,14 @@ colnames(thetas.exp) <- c("const",colnames(x))
 
 if (model == "dma")
   {
-   post.inc <- post %*% mods.incl 
+   if (threshold==0)
+    {
+      post.inc <- post %*% mods.incl 
+    }
+  else
+    {
+      post.inc <- comput[[1]]
+    }
   }
 if (model == "dms" || model == "med")
   {
@@ -610,7 +658,14 @@ colnames(post.inc) <- c("const",colnames(x))
 
 if (model == "dma")
   {
-    exp.var <- post %*% (as.matrix(apply(mods.incl,1,sum))) 
+    if (threshold==0)
+      {
+        exp.var <- post %*% (as.matrix(apply(mods.incl,1,sum))) 
+      }
+    else
+      {
+        exp.var <- as.matrix(comput[[12]])
+      }
   }
 if (model == "dms" || model == "med")
   {
@@ -673,23 +728,23 @@ if (threshold==0)
   { 
     temp <- list(ydma, post.inc, mse, mae, mods.incl, post, exp.var, thetas.exp, 
                  cbind(alpha,lambda,initvar,mod.type,W,initial.period,V.meth,kappa,omega,m.prior,threshold,DOW.nmods,DOW.type), 
-                 yhat.all, y, benchmarks, NA, NA, pdens,exp.lambda)
+                 yhat.all, y, benchmarks, NA,         NA, pdens,exp.lambda)
   }
 else
   {
     colnames(init.mods) <- colnames(post.inc)
     rownames(init.mods) <- seq(1,nrow(init.mods))
-    temp <- list(ydma, post.inc, mse, mae, mods.incl, post, exp.var, thetas.exp, 
+    temp <- list(ydma, post.inc, mse, mae, mods.incl,   NA, exp.var, thetas.exp, 
                  cbind(alpha,lambda,initvar,mod.type,W,initial.period,V.meth,kappa,omega,m.prior,threshold,DOW.nmods,DOW.type), 
                  yhat.all, y, benchmarks, init.mods, nms, pdens,exp.lambda)
   }
                    
 rownames(temp[[2]]) <- rownames(x) 
 colnames(temp[[5]]) <- c("const", colnames(x)) 
-rownames(temp[[6]]) <- rownames(x) 
+if (threshold==0) { rownames(temp[[6]]) <- rownames(x) }
 if (model == "dma")
   {
-    colnames(temp[[6]]) <- seq(1,nrow(mods.incl)) 
+    if (threshold==0) { colnames(temp[[6]]) <- seq(1,nrow(mods.incl)) }
   }
 if (model == "dms" || model == "med")
   {

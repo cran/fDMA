@@ -10,7 +10,7 @@
 \format{\code{trends} is \code{\link[xts]{xts}} object such that
 \itemize{
 \item \code{trends$stock_markets} -- Google Trends for "stock markets"
-\item \code{trends$interest_rate} -- Google Trends for "interes rate"
+\item \code{trends$interest_rate} -- Google Trends for "interest rate"
 \item \code{trends$economic_activity} -- Google Trends for "economic activity"
 \item \code{trends$exchange_rate} -- Google Trends for "exchange rate"
 \item \code{trends$oil_production} -- Google Trends for "oil production"

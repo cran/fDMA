@@ -169,14 +169,43 @@ plot3g <- function(x)
     axis(1, at=inc, labels=labs)
     legend('bottom', inset=c(0,-0.45), colnames(x$weights[[1]]), lty=rep(1,(i+1)), col=col[1:(i+1)], ncol=5, cex=0.6) 
 
+  }
+
+
+plot4g <- function(x)
+  {
+    if (requireNamespace('png')) 
+      {
+      } 
+    else 
+      {
+        stop("package >>png<< is required")
+      }
+
+    inc <- vector()
+    inc[1] <- 1
+    for (i in 1:7)
+      {
+        inc[i+1] <- floor(i * nrow(x$weights[[1]])/7)
+      }
+    labs <- rownames(x$y)[inc]
+    
+    par(xpd=TRUE, fig = c(0, 1, 0, 1), oma = c(2, 1, 1, 1), mar = c(2, 1, 2, 1))
+    
+    windows <- as.numeric(colnames(x$weights[[1]]))
+    
+    plot(as.vector(x$exp.win.[[1]]), type="l", col="blue", ylim=c(min(windows),max(windows)), axes=TRUE, xaxt='n', xlab="", ylab="", main="exp. window size")
+    axis(1, at=inc, labels=labs)
 
   }
+
  
         choices <- c("expected coefficients - separate plots (files in working directory)",
                      "p-values for t-tests - separate plots (files in working directory)",
-                     "models' weights")
+                     "models' weights",
+                     "expected window size")
         pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-        switch(pick, plot1g(x), plot2g(x), plot3g(x))
+        switch(pick, plot1g(x), plot2g(x), plot3g(x), plot4g(x))
 
  
   }

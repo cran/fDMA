@@ -15,6 +15,9 @@ archtest <- function(ts,lag=NULL)
       }
 
     if (missing(ts)) { stop("please, specify ts") }
+    
+    n <- deparse(substitute(ts))
+    
     if (! is.vector(ts)) 
       { 
         ts <- as.vector(ts)
@@ -45,11 +48,11 @@ archtest <- function(ts,lag=NULL)
     st <- m$r.squared * (length(ts)-lag)
     p.val <- pchisq(q=st,df=lag,lower.tail=FALSE)
     
-    st <- round(st,4)
-    p.val <- round(p.val,4)
-    
-    ret <- c(st,p.val)
-    names(ret) <- c("statistic","p-value")
+    names(st) <- "statistic"
+    names(lag) <- "lag"
+    ret <- list(st,lag,paste("ARCH effects of order",lag,"are present"),p.val,"Engle's LM ARCH Test",n)
+    names(ret) <- c("statistic","parameter","alternative","p.value","method","data.name")
+    class(ret) <-"htest"
     
     return(ret)
   }

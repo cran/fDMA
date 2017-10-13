@@ -184,6 +184,7 @@ for (t in 1:nrow(x))
     pi2 <- (pi1^alpha + c2) / (sum((pi1)^alpha) + c2) 
     y.pred[t] <- crossprod(pi2,y.roll.ols[t,])
     coeff.av <- t(sapply(seq(length(coeff)),f.thetas))
+    if (ncol(x)==0) { coeff.av <- t(coeff.av) }
     coeff.av <- pi2 %*% coeff.av
     coeff.av.all <- rbind(coeff.av.all,coeff.av)
     weights <- rbind(weights,pi2)
@@ -192,12 +193,17 @@ for (t in 1:nrow(x))
 
 y.roll.ols <- y.pred
 
+exp.win <- weights[-1,] %*% windows
+
 ##################################################
 
-coeff.av.all <- list(coeff.av.all[-1,])
+coeff.av.all <- list(coeff.av.all[-1,,drop=FALSE])
+if (ncol(x)==0) { colnames(coeff.av.all[[1]]) <- "const" }
 names(coeff.av.all) <- "av. roll. TVP"
 weights <- list(weights[-1,])
 names(weights) <- "av. roll. TVP"
+exp.win <- list(exp.win)
+names(exp.win) <- "av. roll. TVP"
 rownames(weights[[1]]) <- rownames(coeff.av.all[[1]])
 colnames(weights[[1]]) <- windows
 
@@ -230,8 +236,8 @@ if (parallel == TRUE)
     rm(cl)
   }
 
-r <- list(round(fq,digits=4),fq2,as.matrix(y),coeff.av.all,weights) 
-names(r) <- c("summary","y.hat","y","coeff.","weights")
+r <- list(round(fq,digits=4),fq2,as.matrix(y),coeff.av.all,weights,exp.win) 
+names(r) <- c("summary","y.hat","y","coeff.","weights","exp.win.")
 class(r) <- "altf4"
 return(r)
 

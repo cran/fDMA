@@ -31,7 +31,7 @@ altf(y,x,window=NULL,initial.period=NULL,d=NULL,f=NULL,fmod=NULL,c=NULL)
 \item{window}{optional, \code{\link[base]{numeric}}, a size of a rolling regression window (a number of observations), if not specified 10\% of all observations are taken}
 \item{initial.period}{optional, \code{\link[base]{numeric}}, a number of observation since which forecast quality measures are computed, if not specified the whole sample is used, i.e., \code{initial.period=1}}
 \item{d}{optional, \code{\link[base]{logical}}, a parameter used for HR (Hit Ratio) calculation, should be \code{d=FALSE} for level time-series and \code{d=TRUE} if time-series represent changes, if not specified \code{d=FALSE}}
-\item{f}{optional, \code{\link[base]{logical}} vector, indicating which of alternative forecast -- naive, OLS, rec. OLS, roll. OLS, TVP, AR(1), AR(2), auto ARIMA, TVP-AR(1) and TVP-AR(2) -- should be computed, if not specified \code{f=c(\link[base]{rep}(TRUE,11))}, i.e., all alternative forecast are computed}
+\item{f}{optional, \code{\link[base]{logical}} vector, indicating which of alternative forecasts -- naive, OLS, rec. OLS, roll. OLS, TVP, AR(1), AR(2), auto ARIMA, TVP-AR(1), TVP-AR(2) and MS -- should be computed, if not specified \code{f=c(\link[base]{rep}(TRUE,11))}, i.e., all alternative forecasts are computed}
 \item{fmod}{optional, class \code{dma} object, a model to be compared with alternative forecast}
 \item{c}{optional, \code{\link[base]{logical}}, a parameter indicating whether constant is included in models, if not specified \code{c=TRUE} is used, i.e., constant is included}
 }
@@ -61,11 +61,15 @@ ld.wti <- (diff(log(wti)))[-1,]
 ld.drivers <- (diff(log(drivers)))[-1,]
 a3 <- altf(y=ld.wti,x=ld.drivers,d=TRUE)
 
+# models where constant term is not included in modelled equations (if applicable)
+a4 <- altf(y=ld.wti,x=ld.drivers,d=TRUE,c=FALSE)
+
+# compute just selected models
 fcomp <- c(TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,FALSE)
-a4 <- altf(y=ld.wti,x=ld.drivers,d=TRUE,f=fcomp)
+a5 <- altf(y=ld.wti,x=ld.drivers,d=TRUE,f=fcomp)
 
 m1 <- fDMA(y=ld.wti,x=ld.drivers,alpha=0.99,lambda=0.90,initvar=10)
-a5 <- altf(y=ld.wti,x=ld.drivers,d=TRUE,f=fcomp,fmod=m1)
+a6 <- altf(y=ld.wti,x=ld.drivers,d=TRUE,f=fcomp,fmod=m1)
 }
 }
 

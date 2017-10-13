@@ -1,5 +1,5 @@
 
-altf3 <- function (y,x,windows,av=NULL,initial.period=NULL,d=NULL,fmod=NULL,parallel=NULL,c=NULL)
+altf3 <- function (y,x=NULL,windows,av=NULL,initial.period=NULL,d=NULL,fmod=NULL,parallel=NULL,c=NULL)
   {
 
 ### computes some forecast quality measures for an alternative forecast,
@@ -14,7 +14,8 @@ altf3 <- function (y,x,windows,av=NULL,initial.period=NULL,d=NULL,fmod=NULL,para
 
 ### av - models averaging method:
 ###      "ord" - each model is given the same weight,
-###      "aic" - information-theoretic model averaging,
+###      "aic" - information-theoretic model averaging based on Akaike Information Criterion,
+###      "aicc" - information-theoretic model averaging based on Akaike information Criterion with a correction for finite sample sizes,
 ###      "bic" - model averaging based on Bayesian Information Criterion, 
 ###      "mse" - weights are computed according to Mean Squared Error (MSE),
 ###      if av is a number then weights are computed with respect to window size, 
@@ -60,7 +61,7 @@ if (is.null(initial.period)) { initial.period <- 1 }
 if (! is.numeric(initial.period)) { stop("initial.period must be a number") }
 if ((initial.period <= 0) || (initial.period > length(y))) { stop("initial.period must be greater than or equal to 1, and less than the number of observations") }
 if (is.null(av)) { av <- "ord" }
-if (! av %in% c("ord","aic","bic","mse") && ! is.numeric(av)) { stop("please, specify correct models averaging method") }
+if (! av %in% c("ord","aic","aicc","bic","mse") && ! is.numeric(av)) { stop("please, specify correct models averaging method") }
 if (is.null(d)) { d <- FALSE }
 if (! is.logical(d)) { stop("d must be logical, i.e., TRUE or FALSE") }
 if (requireNamespace('forecast')) { } else { stop('package >>forecast<< is required') }
@@ -93,7 +94,7 @@ if (parallel == TRUE)
   {
      cl <- makeCluster(detectCores() - 1)
      clusterEvalQ(cl, {library(xts)})
-     clusterExport(cl, c("y","x","windows"), envir=environment())
+     clusterExport(cl, c("y","x","windows","c"), envir=environment())
   }
 
 
@@ -138,16 +139,23 @@ if (av == "aic")
     w <- rbind(rep.int(1 / length(windows),length(windows)), w)
     w <- w[-nrow(w),]
   }
-if (av == "bic") 
+if (av == "aicc") 
   { 
     w <- sapply(y.roll.ols,"[[",3) 
     w <- f.c(w)
     w <- rbind(rep.int(1 / length(windows),length(windows)), w)
     w <- w[-nrow(w),]
   }
-if (av == "mse") 
+if (av == "bic") 
   { 
     w <- sapply(y.roll.ols,"[[",4) 
+    w <- f.c(w)
+    w <- rbind(rep.int(1 / length(windows),length(windows)), w)
+    w <- w[-nrow(w),]
+  }
+if (av == "mse") 
+  { 
+    w <- sapply(y.roll.ols,"[[",5) 
     w <- 1 / w
     w <- gNormalize(w)
     w <- rbind(rep.int(1 / length(windows),length(windows)), w)
@@ -161,8 +169,11 @@ if (is.numeric(av))
   }
 
 w <- as.matrix(w)
-coeff <- lapply(y.roll.ols,"[[",5)
-pval <- lapply(y.roll.ols,"[[",6)
+
+exp.win <- w %*% windows
+
+coeff <- lapply(y.roll.ols,"[[",6)
+pval <- lapply(y.roll.ols,"[[",7)
 
 f.thetas <- function(i)
   {
@@ -176,7 +187,14 @@ f.pval <- function(i)
 
 if (c==TRUE)
   {
-    coeff.av.all <- matrix(NA,nrow=1,ncol=ncol(x)+1)
+    if (!is.null(x)) 
+      { 
+        coeff.av.all <- matrix(NA,nrow=1,ncol=ncol(x)+1)
+      }
+    else
+      {
+        coeff.av.all <- matrix(NA,nrow=1,ncol=1)
+      }
   }
 else
   {
@@ -184,18 +202,31 @@ else
   }
 pval.av.all <- coeff.av.all
 
-for (t in 1:nrow(x))
+for (t in 1:length(as.vector(y)))
   {
-    coeff.av <- t(sapply(seq(length(coeff)),f.thetas))
-    pval.av <- t(sapply(seq(length(coeff)),f.pval))
+    if (is.null(x)) 
+      {
+        coeff.av <- sapply(seq(length(coeff)),f.thetas)
+        pval.av <- sapply(seq(length(coeff)),f.pval)
+      }
+    else
+      {
+        coeff.av <- t(sapply(seq(length(coeff)),f.thetas))
+        pval.av <- t(sapply(seq(length(coeff)),f.pval))
+      }
     coeff.av <- w[t,] %*% coeff.av
     pval.av <- w[t,] %*% pval.av
     coeff.av.all <- rbind(coeff.av.all,coeff.av)
     pval.av.all <- rbind(pval.av.all,pval.av)
   }
-coeff.av.all <- coeff.av.all[-1,] 
-pval.av.all <- pval.av.all[-1,] 
-
+coeff.av.all <- coeff.av.all[-1,,drop=FALSE] 
+pval.av.all <- pval.av.all[-1,,drop=FALSE] 
+if (is.null(x))
+  {
+   colnames(coeff.av.all) <- "const"
+   colnames(pval.av.all) <- colnames(coeff.av.all)
+  }
+ 
 y.roll.ols <- sapply(y.roll.ols,"[[",1)
 y.roll.ols <- y.roll.ols * w
 y.roll.ols <- rowSums(y.roll.ols)
@@ -207,6 +238,8 @@ coeff.av.all <- list(coeff.av.all)
 names(coeff.av.all) <- "av. roll. TVP"
 pval.av.all <- list(pval.av.all)
 names(pval.av.all) <- "av. roll. TVP"
+exp.win <- list(exp.win)
+names(exp.win) <- "av. roll. TVP"
 w <- list(w)
 names(w) <- "av. roll. TVP"
 colnames(w[[1]]) <- windows
@@ -241,8 +274,8 @@ if (parallel == TRUE)
     rm(cl)
   }
 
-r <- list(round(fq,digits=4),fq2,as.matrix(y),coeff.av.all,w,pval.av.all)
-names(r) <- c("summary","y.hat","y","coeff.","weights","p.val.")
+r <- list(round(fq,digits=4),fq2,as.matrix(y),coeff.av.all,w,pval.av.all,exp.win)
+names(r) <- c("summary","y.hat","y","coeff.","weights","p.val.","exp.win.")
 class(r) <- "altf3"
 return(r)
 

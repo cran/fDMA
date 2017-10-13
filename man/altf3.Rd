@@ -10,14 +10,14 @@ ME (Mean Error), RMSE (Root Mean Squared Error), MAE (Mean Absolute Error), MPE 
 }
 
 \usage{
-altf3(y,x,windows,av=NULL,initial.period=NULL,d=NULL,fmod=NULL,parallel=NULL,c=NULL)
+altf3(y,x=NULL,windows,av=NULL,initial.period=NULL,d=NULL,fmod=NULL,parallel=NULL,c=NULL)
 }
 
 \arguments{
 \item{y}{\code{\link[base]{numeric}} or a column \code{\link[base]{matrix}} of a dependent variable}
-\item{x}{\code{\link[base]{matrix}} of independent variables, different columns correspond to different independent variables}
+\item{x}{\code{\link[base]{matrix}} of independent variables, different columns correspond to different independent variables, if not specified only constant term will be included}
 \item{windows}{\code{\link[base]{numeric}} \code{\link[base]{vector}}, sizes of a rolling regression windows (numbers of observations)}
-\item{av}{optional, a method for model averaging, \code{av="ord"} corresponds to equal weights for each model, \code{av="aic"} corresponds to information theoretic model averaging based on Akaike Information Criterion, \code{av="bic"} corresponds to information theoretic model averaging based on Bayesian Information Criterion, \code{av="mse"} corresponds to setting weights proportional to the inverse of the models Mean Squared Error, if \code{av} is \code{\link[base]{numeric}} then weights are computed proportional to the \code{av}-th power of window size, if not specified \code{av="ord"} is used}
+\item{av}{optional, a method for model averaging, \code{av="ord"} corresponds to equal weights for each model, \code{av="aic"} corresponds to information theoretic model averaging based on Akaike Information Criterion, \code{av="aicc"} corresponds to information theoretic model averaging based on Akaike Information Criterion with a correction for finite sample sizes, \code{av="bic"} corresponds to information theoretic model averaging based on Bayesian Information Criterion, \code{av="mse"} corresponds to setting weights proportional to the inverse of the models Mean Squared Error, if \code{av} is \code{\link[base]{numeric}} then weights are computed proportional to the \code{av}-th power of window size, if not specified \code{av="ord"} is used}
 \item{initial.period}{optional, \code{\link[base]{numeric}}, a number of observation since which forecast quality measures are computed, if not specified the whole sample is used, i.e., \code{initial.period=1}}
 \item{d}{optional, \code{\link[base]{logical}}, a parameter used for HR (Hit Ratio) calculation, should be \code{d=FALSE} for level time-series and \code{d=TRUE} if time-series represent changes, if not specified \code{d=FALSE}}
 \item{fmod}{optional, class \code{dma} object, a model to be compared with alternative forecast}
@@ -34,6 +34,7 @@ altf3(y,x,windows,av=NULL,initial.period=NULL,d=NULL,fmod=NULL,parallel=NULL,c=N
 \item{$coeff.}{\code{\link[base]{list}} of coefficients from a rolling regression averaged over selected window sizes}
 \item{$weights}{\code{\link[base]{list}} of weights of models used in averaging}
 \item{$p.val.}{\code{\link[base]{list}} of p-values (averaged over selected window sizes) for t-test of statistical significance for coefficients from a rolling regression}
+\item{$exp.win.}{\code{\link[base]{list}} of expected window size}
 }
 
 \examples{
@@ -56,6 +57,12 @@ a3 <- altf3(y=ld.wti,x=ld.drivers,d=TRUE,windows=c(36,100,150))
 a4 <- altf3(y=ld.wti,x=ld.drivers,d=TRUE,av="aic",windows=c(36,100,150))
 
 a5 <- altf3(y=ld.wti,x=ld.drivers,d=TRUE,av=-2,windows=c(36,100,150))
+
+# models without a constant term 
+a6 <- altf3(y=ld.wti,x=ld.drivers,d=TRUE,av=-2,windows=c(36,100,150),c=FALSE)
+
+# models only with a constant term
+a7 <- altf3(y=ld.wti,d=TRUE,av=-2,windows=c(36,100,150))
 }
 }
 

@@ -34,6 +34,7 @@ d=NULL,fmod=NULL,parallel=NULL,c=NULL)
 \item{$y}{\code{y}, forecasted time-series}
 \item{$coeff.}{\code{\link[base]{list}} of coefficients from a time-varying parameters rolling regression averaged over selected window sizes}
 \item{$weights}{\code{\link[base]{list}} of weights of models used in averaging}
+\item{$exp.win.}{\code{\link[base]{list}} of expected window size}
 }
 
 \examples{
@@ -54,7 +55,14 @@ ld.drivers <- (diff(log(drivers)))[-1,]
 a3 <- altf4(y=ld.wti,x=ld.drivers,d=TRUE,windows=c(36,100,150))
 
 win <- c(36,100,150)
-a5 <- altf4(y=ld.wti,x=ld.drivers,d=TRUE,windows=win,alpha=0.9,lambda=0.95)
+a4 <- altf4(y=ld.wti,x=ld.drivers,d=TRUE,windows=win,alpha=0.9,lambda=0.95)
+
+# models without a constant term 
+a5 <- altf4(y=ld.wti,x=ld.drivers,d=TRUE,windows=win,alpha=0.9,lambda=0.95,c=FALSE)
+
+# models only with a constant term
+empty <- matrix(,nrow=nrow(ld.drivers),ncol=0)
+a6 <- altf4(y=ld.wti,x=empty,d=TRUE,windows=win,alpha=0.9,lambda=0.95)
 }
 }
 

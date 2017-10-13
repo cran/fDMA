@@ -25,6 +25,7 @@ roll.reg(y,x=NULL,window,c=NULL)
 \value{class \code{reg} object, \code{\link[base]{list}} of
 \item{$y.hat}{fitted (forecasted) values}
 \item{$AIC}{Akaike Information Criterion (from the current window size)}
+\item{$AICc}{Akaike Information Criterion with a correction for finite sample sizes (from the current window size)}
 \item{$BIC}{Bayesian Information Criterion (from the current window size)} 
 \item{$MSE}{Mean Squared Error (from the current window size)}
 \item{$coeff.}{regression coefficients}

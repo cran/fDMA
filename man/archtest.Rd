@@ -16,7 +16,14 @@ archtest(ts,lag=NULL)
 \item{lag}{\code{\link[base]{numeric}}, suspected order of ARCH process, if not specified \code{lag=1} is taken}
 }
 
-\value{\code{\link[base]{vector}} consisting of test statistic and p-value}
+\value{class \code{htest} object, \code{\link[base]{list}} of 
+\item{statistic}{test statistic}
+\item{parameter}{\code{lag} used in the test}
+\item{alternative}{alternative hypothesis of the test}
+\item{p.value}{p-value}
+\item{method}{name of the test}
+\item{data.name}{name of the tested time-series}
+}
 
 \examples{
 data(crudeoil)

@@ -273,7 +273,7 @@ plot8 <- function(x)
 
     par(xpd=TRUE, fig = c(0, 1, 0, 1), oma = c(2, 1, 1, 1), mar = c(7, 1, 2, 1)) 
     
-    for (i in 1:(ncol(x$post.incl)-1))
+    for (i in 1:(ncol(x$post.mod)-1))
       {
         plot(x$post.mod[,i], type="l", col=col[i], ylim=c(0,1), axes=FALSE, xaxt='n', xlab="", ylab="", main="")
         par(new=TRUE)
@@ -320,18 +320,18 @@ plot10 <- function(x)
             choices <- c("actual and predicted", "residuals","exp. var", "posterior inclusion probabilities - one plot", 
                          "posterior inclusion probabilities - separate plots (files in working directory)",
                          "expected coefficients - one plot", "expected coefficients - separate plots (files in working directory)", 
-                         "posterior model probabilities", "exp. lambda")
+                         "exp. lambda", "posterior model probabilities")
             pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-            switch(pick, plot1(x), plot2(x), plot3(x), plot4(x), plot5(x), plot6(x), plot7(x), plot8(x), plot10(x))
+            switch(pick, plot1(x), plot2(x), plot3(x), plot4(x), plot5(x), plot6(x), plot7(x), plot10(x), plot8(x))
           }
         else
           {
             choices <- c("actual vs. predicted", "residuals","exp. var", "posterior inclusion probabilities - one plot", 
                          "posterior inclusion probabilities - separate plots (files in working directory)",
                          "expected coefficients - one plot", "expected coefficients - separate plots (files in working directory)", 
-                         "posterior model probabilities", "exp. lambda", "number of models used in DMA estimation")
+                         "exp. lambda", "number of models used in DMA estimation")
             pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-            switch(pick, plot1(x), plot2(x), plot3(x), plot4(x), plot5(x), plot6(x), plot7(x), plot8(x), plot10(x), plot9(x))
+            switch(pick, plot1(x), plot2(x), plot3(x), plot4(x), plot5(x), plot6(x), plot7(x), plot10(x), plot9(x))
           }
       }
     

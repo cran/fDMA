@@ -1,5 +1,7 @@
 exportPattern("^[[:alpha:]]+")
 import(doParallel, forecast, foreach, gplots, graphics, grDevices, iterators, MSwM, parallel, png, utils, xts, zoo)
+importFrom(psych,describe)
+importFrom(stats,sd)
 importFrom(stats,lm)
 importFrom(stats,lag)
 importFrom(stats,var)

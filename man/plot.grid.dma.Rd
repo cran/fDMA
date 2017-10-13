@@ -42,6 +42,10 @@ Chosing 0 exits the \code{plot} command.
 It is suggested to execute \code{\link[grDevices]{graphics.off}} before exectuing \code{plot} command for \code{grid.dma} object. However, the User should take care to save all other plots before executing this command, as they can be lost.
 
 If \code{\link[grDevices]{graphics.off}} is not executed before plotting \code{grid.dma} object, sometimes a legend might cover the important parts of the plot.
+
+If any of the models comes from using multiple lambda (see \code{\link{fDMA}}), then RMSE and MAE are not plotted.
+
+Also, if \code{\link[base]{length}(grid.alpha)} or \code{\link[base]{length}(grid.lambda)} is less than 2, then RMSE and MAE are not plotted.
 }
 
 \examples{

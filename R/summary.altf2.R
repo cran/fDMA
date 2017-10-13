@@ -18,7 +18,42 @@ summary.altf2 <- function(object, ...)
    c <- round(c,digits=4)
    print(c)
    cat("\n")
+
    
+  for (j in 1:nmods)
+    {
+      probs <- round(colMeans(x$rel.var.imp.[[j]],na.rm=TRUE),digits=2)
+      min.probs <- round(apply(x$rel.var.imp.[[j]],2,min, na.rm=TRUE),digits=2)
+      max.probs <- round(apply(x$rel.var.imp.[[j]],2,max, na.rm=TRUE),digits=2)
+     
+      inc <- vector()
+
+      for (i in 1:length(probs))
+        {
+          rvi1 <- as.vector(x$rel.var.imp.[[j]][,i])
+          rvi2 <- na.exclude(rvi1)
+          rvi2 <- rvi2[rvi2>0.5]
+          inc[i] <- round(length(rvi2)/length(rvi1),digits=2)
+        }
+      rm(i)
+     
+      s <- cbind(min.probs,probs,max.probs,as.matrix(inc))
+      colnames(s) <- c("min rvi", "mean rvi", "max rvi", "inc")
+      rownames(s) <- colnames(x$coeff.[[1]])
+      temp <- names(x$rel.var.imp.)[j]
+      names(temp) <- c("")
+      print(temp)
+      cat("\n")
+      print(s)
+      cat("\n")
+    }
+   cat("\n")
+   cat("* rvi - relative variable importance")
+   cat("\n")
+   cat("* inc - frequency when relative variable importance > 1/2")
+   cat("\n")
+   cat("\n")
+
    if (! all(names(x$coeff.)==c("av. TVP")))
     {
       cat("Frequency when p-values for t-test are less than: ")
@@ -47,7 +82,7 @@ summary.altf2 <- function(object, ...)
          vv <- round(vv,digits=2)
          colnames(vv) <- colnames(x$coeff.[[1]])
          rownames(vv) <- c("0.01","0.05","0.10")
-         temp <- names(x$p.val)[k]
+         temp <- names(x$p.val.)[k]
          names(temp) <- c("")
          print(temp)
          cat("\n")

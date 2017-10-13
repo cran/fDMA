@@ -15,7 +15,7 @@
 \details{
 The function produces the outcomes as \code{\link{print.altf2}}.
 
-Additionally, it provides mean values of coefficients and how often p-values (averaged over selected models) for t-test of statistical significance for each independent variable in the model are below 1\%, 5\% and 10\%, respectively. 
+Additionally, it provides mean values of coefficients, min, max and mean relative variable importance for each independent variable in the model, frequency when relative variable importance is over 0.5 for each independent variable in the model, and how often p-values (averaged over selected models) for t-test of statistical significance for each independent variable in the model are below 1\%, 5\% and 10\%, respectively. 
 }
 
 \examples{

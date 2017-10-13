@@ -10,7 +10,7 @@ The function estimates Dynamic Model Averaging (and some of its variations). The
 \usage{
 fDMA(y,x,alpha,lambda,initvar,W=NULL,initial.period=NULL,V.meth=NULL,kappa=NULL, 
 gprob=NULL,omega=NULL,model=NULL,parallel=NULL,m.prior=NULL,mods.incl=NULL, 
-DOW=NULL,DOW.nmods=NULL,DOW.type=NULL,bm=NULL)
+DOW=NULL,DOW.nmods=NULL,DOW.type=NULL,DOW.limit.nmods=NULL,progress.info=NULL,bm=NULL)
 }
 
 \arguments{
@@ -29,9 +29,11 @@ DOW=NULL,DOW.nmods=NULL,DOW.type=NULL,bm=NULL)
 \item{parallel}{optional, \code{\link[base]{logical}}, indicate whether parallel computations should be used, by default \code{parallel=FALSE}}
 \item{m.prior}{optional, \code{\link[base]{numeric}}, a parameter for general model prior (Mitchell and Beauchamp, 1988), by default \code{m.prior=0.5}, which corresponds to the uniform distribution, i.e., non-informative priors, see also Eicher et al. (2011)}
 \item{mods.incl}{optional, \code{\link[base]{matrix}} indicating which models should be used for estimation, the first column indicates inclusion of a constant, by default all possible models with a constant are used, inclusion of a variable is indicated by 1, omitting by 0}
-\item{DOW}{optional, \code{\link[base]{numeric}}, a threshold for Dynamic Occam's Window (Onorante and Raftery, 2016), should be a number between 0 and 1, if \code{DOW=0}, then no Dynamic Occam's Window is applied, by default \code{DOW=0}, Dynamic Occam's Window can be applied only if all possible models with a constant are used}
+\item{DOW}{optional, \code{\link[base]{numeric}}, a threshold for Dynamic Occam's Window (Onorante and Raftery, 2016), should be a number between 0 and 1, if \code{DOW=0}, then no Dynamic Occam's Window is applied, by default \code{DOW=0}, Dynamic Occam's Window can be applied only to Dynamic Model Averaging, i.e., when \code{model="dma"}}
 \item{DOW.nmods}{optional, \code{\link[base]{numeric}}, initial number of models for Dynamic Occam's Window, should be less than the number of all possible models and larger than or equal to 2, they are randomly chosen, if \code{DOW.nmods=0}, then initially models with exactly one variable are taken, by default \code{DOW.nmods=0}}
 \item{DOW.type}{optional, \code{DOW.type="r"} corresponds to DMA-R from Onorante and Raftery (2016), \code{DOW.type="e"} to DMA-E, by default \code{DOW.type="r"}}
+\item{DOW.limit.nmods}{optional, \code{\link[base]{numeric}}, maximum number of models selected by Dynamic Occam's Window, an additional limitation to the threshold given by \code{DOW}, by default no limit is set} 
+\item{progress.info}{optional, \code{\link[base]{logical}}, applicable only if Dynamic Occam's Window is used, otherwise ignored, if \code{progress.info=TRUE} number of the current recursive DMA computation round and number of models selected for this round are printed, by default \code{progress.info=FALSE}}
 \item{bm}{optional, \code{\link[base]{logical}}, indicate whether benchmark forecast should be computed, these benchmarks are naive forecast (all forecasts are set to be the value of the last observation) and Auto Arima \code{\link[forecast]{auto.arima}}, by default \code{bm=FALSE}}
 }
 
@@ -42,8 +44,8 @@ DOW=NULL,DOW.nmods=NULL,DOW.type=NULL,bm=NULL)
 \item{$post.incl}{posteriori inclusion probabilities for independent variables}
 \item{$MSE}{Mean Squared Error of forecast}
 \item{$MAE}{Mean Absolute Error of forecast} 
-\item{$models}{models included in estimations}
-\item{$post.mod}{posteriori probabilities of all used models}
+\item{$models}{models included in estimations, or models used in the last step of Dynamic Occam's Window method (if this method has been selected)}
+\item{$post.mod}{posteriori probabilities of all used models, or \link{NA} if Dynamic Occam's Window method has been selected}
 \item{$exp.var}{expected number of variables (incl. constant)}
 \item{$exp.coef.}{expected values of regression coefficients}
 \item{$parameters}{parameters of the estimated model} 
@@ -98,8 +100,15 @@ m6 <- fDMA(y=ld.wti,x=ld.drivers,alpha=0.99,lambda=0.90,initvar=10,mods.incl=mds
 s <- ld.drivers[1:20,1:4]
 mod6 <- fDMA(y=ld.wti[1:20,1],x=s,alpha=0.99,lambda=0.90,initvar=10,mods.incl=mds[1:5,1:5])
 }
+# models just with one independent variable (without a constant) will be averaged
+mds.nc <- diag(1,ncol(ld.drivers),ncol(ld.drivers))
+mds.nc <- cbind(rep(0,ncol(ld.drivers)),mds.nc)
 \dontrun{
-mod7 <- fDMA(y=ld.wti,x=ld.drivers,alpha=0.99,lambda=c(0.99,0.95,0.90),initvar=10)
+m7 <- fDMA(y=ld.wti,x=ld.drivers,alpha=0.99,lambda=0.90,initvar=10,mods.incl=mds.nc)
+}
+# model with multiple lambda
+\dontrun{
+m8 <- fDMA(y=ld.wti,x=ld.drivers,alpha=0.99,lambda=c(0.99,0.95,0.90),initvar=10)
 }
 }
 

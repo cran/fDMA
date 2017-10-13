@@ -3,7 +3,7 @@ summary.grid.dma <- function(object, ...)
   {
    x <- object
    
-   cat("MSE: ")
+   cat("RMSE: ")
    cat("\n")
    print(round(x$RMSE,digits=4))
    cat("\n")

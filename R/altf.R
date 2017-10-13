@@ -109,7 +109,7 @@ else
   }
 y.ols <- m$fitted.values
 mm <- summary(m)
-if (all(is.finite(mm$coefficients[,1])) && all(is.finite(mm$coefficients[,4])))
+if (all(is.finite(m$coefficients)) && all(is.finite(mm$coefficients[,4])))
   {
     coeff.ols <- t(mm$coefficients[,1,drop=FALSE])
     pval.ols <- t(mm$coefficients[,4,drop=FALSE])
@@ -262,7 +262,7 @@ rm(x1,yy)
 
 mm <- summary(m)
 
-if (all(is.finite(mm$coefficients[,1])) && all(is.finite(mm$coefficients[,4])))
+if (all(is.finite(m$coefficients)) && all(is.finite(mm$coefficients[,4])))
   {
     coeff.ar1 <- t(mm$coefficients[,1,drop=FALSE])
     pval.ar1 <- t(mm$coefficients[,4,drop=FALSE])
@@ -316,7 +316,7 @@ y.ar2 <- c(NA,NA,y.ar2)
 
 rm(x1,yy,x2)
 
-if (all(is.finite(mm$coefficients[,1])) && all(is.finite(mm$coefficients[,4])))
+if (all(is.finite(m$coefficients)) && all(is.finite(mm$coefficients[,4])))
   {
     coeff.ar2 <- t(mm$coefficients[,1,drop=FALSE])
     pval.ar2 <- t(mm$coefficients[,4,drop=FALSE])

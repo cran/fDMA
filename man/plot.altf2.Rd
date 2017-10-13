@@ -19,7 +19,12 @@ After executing the command, the User is asked to choose
 
 2 - for plotting p-values (averaged over selected models) for t-test of statistical significance for regression coefficients from applied models, in separate png files, saved in the current working directory, and moreover, to paste them into one big plot (also saved as a png file in the current working directory),
 
-3 - for plotting weights of all models used in averaging.
+3 - for plotting weights of all models used in averaging,
+
+4 - for plotting relative variable importance in separate png files, saved in the current working directory, and moreover, to paste them into one big plot (also saved as a png file in the current working directory),
+
+5 - for plotting expected number of variables (incl. constant) from all models used in averaging.
+
 
 Chosing 0 exits the \code{plot} command.
 }

@@ -30,11 +30,9 @@ If \code{x} comes from estimation of Dynamic Model Averaging (DMA), after execut
 
 7 - for plotting expected coefficients (including constant) in separate png files, saved in the current working directory, and moreover, to paste them into one big plot (also saved as a png file in the current working directory),
 
-8 - for plotting posterior model probabilities, 
+8 - for plotting the expected value of \code{lambda},
 
-9 - for plotting the expected value of \code{lambda},
-
-10 - for plotting the number of models used in Dynamic Model Averaging, if Dynamic Occam's Window method has been selected.
+9 - for plotting posterior model probabilities, if Dynamic Occam's Window method has not been selected, or plotting the number of models used in Dynamic Model Averaging, if Dynamic Occam's Window method has been selected.
 
 
 Chosing 0 exits the \code{plot} command.

@@ -1,14 +1,15 @@
 
 grid.DMA <- function (y,x,grid.alpha,grid.lambda,initvar,
                       W=NULL,initial.period=NULL,V.meth=NULL,kappa=NULL,gprob=NULL,omega=NULL,model=NULL,parallel.grid=NULL,
-                      m.prior=NULL,mods.incl=NULL,DOW=NULL,DOW.nmods=NULL,DOW.type=NULL)
+                      m.prior=NULL,mods.incl=NULL,DOW=NULL,DOW.nmods=NULL,DOW.type=NULL,DOW.limit.nmods=NULL,bm=NULL)
 {
 
 ### this is a wrapper of fDMA() 
 
 ### "foreach", "doParallel", "stats", "forecast" and "xts" packages are required
 
-### grid.alpha and grid.lambda must be numeric vectors, 
+### grid.alpha must be numeric vector, 
+### grid.lambda can be numeric vector or list of numeric vectors
 ### fDMA for all combinations of alpha and lambda 
 ### possible to be obtained from the values in grid.alpha and grid.lambda respectively are computed
 
@@ -23,13 +24,30 @@ for (i in 1:length(grid.alpha))
   }
 rm(i)
 if (missing(grid.lambda)) { stop("please, specify grid.lambda") }
-if (! missing(grid.lambda) && ! is.numeric(grid.lambda)) { stop("grid.lambda must be a collection of numbers") }
-if (anyNA(grid.lambda)) { stop("missing values in grid.lambda") }
-for (i in 1:length(grid.lambda))
+if (! missing(grid.lambda) && (! is.numeric(grid.lambda) && ! is.list(grid.lambda))) { stop("grid.lambda must be a collection of numbers") }
+if (is.numeric(grid.lambda) && anyNA(grid.lambda)) { stop("missing values in grid.lambda") }
+if (is.numeric(grid.lambda))
   {
-    if ((grid.lambda[i] <= 0) || (grid.lambda[i] > 1)) { stop("grid.lambda must be a collection of numbers greater than 0, and less than or equal to 1") }
+    for (i in 1:length(grid.lambda))
+      {
+        if ((grid.lambda[i] <= 0) || (grid.lambda[i] > 1)) { stop("grid.lambda must be a collection of numbers greater than 0, and less than or equal to 1") }
+      }
+    rm(i)
   }
-rm(i)
+if (is.list(grid.lambda))
+  {
+    for (i in 1:length(grid.lambda))
+      {
+        if (anyNA(grid.lambda[[i]])) { stop("missing values in grid.lambda") }
+               
+        for (j in 1:length(grid.lambda[[i]]))
+          {
+            if ((grid.lambda[[i]][j] <= 0) || (grid.lambda[[i]][j] > 1)) 
+                    { stop("grid.lambda must be a collection of numbers greater than 0, and less than or equal to 1") }
+          }
+      }
+    rm(i,j)
+  }
 if (missing(initvar)) { stop("please, specify initvar (i.e., initial variance)") }
 if (! missing(initvar) && ! is.numeric(initvar)) { stop("initvar must be a number") }
 if (initvar <= 0) { stop("variance (initvar) must be positive") }
@@ -56,9 +74,22 @@ if (parallel.grid == TRUE)
 #############################################
 
 grid.alpha <- unique(grid.alpha)
-grid.lambda <- unique(grid.lambda)
 grid.alpha <- sort(grid.alpha, decreasing=TRUE)
-grid.lambda <- sort(grid.lambda, decreasing=TRUE)
+if (is.numeric(grid.lambda))
+  {
+    grid.lambda <- unique(grid.lambda)
+    grid.lambda <- sort(grid.lambda, decreasing=TRUE)
+  }
+if (is.list(grid.lambda))
+  {
+    for (i in 1:length(grid.lambda))
+      {
+        grid.lambda[[i]] <- unique(grid.lambda[[i]])
+        grid.lambda[[i]] <- sort(grid.lambda[[i]], decreasing=TRUE)
+      }
+    rm(i)
+    grid.lambda <- unique(grid.lambda)
+  }
 
 i.alpha <- NULL
 j.lambda <- NULL
@@ -68,23 +99,51 @@ if (parallel.grid == TRUE)
     cl <- makeCluster(detectCores() - 1)
     registerDoParallel(cl)
     
-    gDMA <- foreach(i.alpha=grid.alpha, .packages=c("xts","fDMA")) %:% 
-        foreach(j.lambda=grid.lambda, .packages=c("xts","fDMA")) %dopar%
-          {
-            fDMA(y=y,x=x,alpha=i.alpha,lambda=j.lambda,initvar=initvar,W=W,initial.period=initial.period,V.meth=V.meth,kappa=kappa,
-                gprob=gprob,omega=omega,model=model,parallel=FALSE,m.prior=m.prior,mods.incl=mods.incl,DOW=DOW,DOW.nmods=DOW.nmods,DOW.type=DOW.type)
-          }
+    if (is.numeric(grid.lambda))
+      {
+        gDMA <- foreach(i.alpha=grid.alpha, .packages=c("xts","fDMA")) %:% 
+            foreach(j.lambda=grid.lambda, .packages=c("xts","fDMA")) %dopar%
+              {
+                fDMA(y=y,x=x,alpha=i.alpha,lambda=j.lambda,initvar=initvar,W=W,initial.period=initial.period,V.meth=V.meth,kappa=kappa,
+                    gprob=gprob,omega=omega,model=model,parallel=FALSE,m.prior=m.prior,mods.incl=mods.incl,DOW=DOW,DOW.nmods=DOW.nmods,DOW.type=DOW.type,
+                    bm=bm,DOW.limit.nmods=DOW.limit.nmods)
+              }
+      }  
+    if (is.list(grid.lambda))
+      {
+        gDMA <- foreach(i.alpha=grid.alpha, .packages=c("xts","fDMA")) %:% 
+            foreach(j.lambda=1:length(grid.lambda), .packages=c("xts","fDMA")) %dopar%
+              {
+                fDMA(y=y,x=x,alpha=i.alpha,lambda=grid.lambda[[j.lambda]],initvar=initvar,W=W,initial.period=initial.period,V.meth=V.meth,kappa=kappa,
+                    gprob=gprob,omega=omega,model=model,parallel=FALSE,m.prior=m.prior,mods.incl=mods.incl,DOW=DOW,DOW.nmods=DOW.nmods,DOW.type=DOW.type,
+                    bm=bm,DOW.limit.nmods=DOW.limit.nmods)
+              }
+      }      
           
     stopCluster(cl)
   }
 else
   {
-    gDMA <- foreach(i.alpha=grid.alpha, .packages=c("xts","fDMA")) %:% 
-        foreach(j.lambda=grid.lambda, .packages=c("xts","fDMA")) %do%
-          {
-            fDMA(y=y,x=x,alpha=i.alpha,lambda=j.lambda,initvar=initvar,W=W,initial.period=initial.period,V.meth=V.meth,kappa=kappa,
-                gprob=gprob,omega=omega,model=model,parallel=FALSE,m.prior=m.prior,mods.incl=mods.incl,DOW=DOW,DOW.nmods=DOW.nmods,DOW.type=DOW.type)
-          }
+    if (is.numeric(grid.lambda))
+      {
+        gDMA <- foreach(i.alpha=grid.alpha, .packages=c("xts","fDMA")) %:% 
+            foreach(j.lambda=grid.lambda, .packages=c("xts","fDMA")) %do%
+              {
+                fDMA(y=y,x=x,alpha=i.alpha,lambda=j.lambda,initvar=initvar,W=W,initial.period=initial.period,V.meth=V.meth,kappa=kappa,
+                    gprob=gprob,omega=omega,model=model,parallel=FALSE,m.prior=m.prior,mods.incl=mods.incl,DOW=DOW,DOW.nmods=DOW.nmods,DOW.type=DOW.type,
+                    bm=bm,DOW.limit.nmods=DOW.limit.nmods)
+              }
+      }
+    if (is.list(grid.lambda))
+      {
+        gDMA <- foreach(i.alpha=grid.alpha, .packages=c("xts","fDMA")) %:% 
+            foreach(j.lambda=1:length(grid.lambda), .packages=c("xts","fDMA")) %do%
+              {
+                fDMA(y=y,x=x,alpha=i.alpha,lambda=grid.lambda[[j.lambda]],initvar=initvar,W=W,initial.period=initial.period,V.meth=V.meth,kappa=kappa,
+                    gprob=gprob,omega=omega,model=model,parallel=FALSE,m.prior=m.prior,mods.incl=mods.incl,DOW=DOW,DOW.nmods=DOW.nmods,DOW.type=DOW.type,
+                    bm=bm,DOW.limit.nmods=DOW.limit.nmods)
+              }
+      }
   }
 
 mse <- matrix(NA,nrow=length(grid.lambda),ncol=length(grid.alpha))

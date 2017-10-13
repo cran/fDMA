@@ -74,6 +74,7 @@ if (is.null(W))
       for (i in 1:ncol(x))
         {
           v[i] <- var(x[,i])
+          if (v[i]==0) { v[i] <- 0.0001 }
         }
     }
   if (length(y)>1)

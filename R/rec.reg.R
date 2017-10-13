@@ -26,6 +26,7 @@ rec.reg <- function(y,x=NULL,c=NULL)
 
     fv <- vector()
     aic <- vector()
+    aicc <- vector() 
     bic <- vector() 
     mse <- vector() 
     if (! is.null(x))
@@ -33,15 +34,18 @@ rec.reg <- function(y,x=NULL,c=NULL)
         if (c==TRUE)
           {
             coeff <- matrix(NA,ncol=(ncol(x)+1),nrow=1)
+            n.par <- ncol(x)+2
           }
         else
           {
             coeff <- matrix(NA,ncol=ncol(x),nrow=1)
+            n.par <- ncol(x)+1
           }
       }
     else
       {
         coeff <- matrix(NA,ncol=1,nrow=1)
+        n.par <- 2
       }
     pval <- coeff
 
@@ -64,6 +68,7 @@ rec.reg <- function(y,x=NULL,c=NULL)
       }
     fv[1] <- m$fitted.values[1]
     aic[1] <- AIC(m)
+    aicc[1] <- aic[1] + (2*n.par*(n.par+1))/(1-n.par-1)
     bic[1] <- BIC(m)
     mse[1] <- (m$residuals)^2
     mm <- summary(m)
@@ -83,20 +88,24 @@ rec.reg <- function(y,x=NULL,c=NULL)
         if (is.null(x))
           {
             m <- lm(y[1:i] ~ 1)
+            n.par <- 2
           }
         else
           {
             if (c==TRUE)
               {
                 m <- lm(y[1:i] ~ x[1:i,])
+                n.par <- ncol(x) + 2
               }
             else
               {
                 m <- lm(y[1:i] ~ x[1:i,] -1)
+                n.par <- ncol(x) + 1
               }
           }
         fv[i] <- m$fitted.values[i]
         aic[i] <- AIC(m)
+        aicc[i] <- aic[i] + (2*n.par*(n.par+1))/(i-n.par-1)
         bic[i] <- BIC(m)
         mse[i] <- mean((m$residuals)^2)
         mm <- summary(m)
@@ -135,8 +144,8 @@ rec.reg <- function(y,x=NULL,c=NULL)
 
       if (is.matrix(y.old) || is.xts(y.old)) { names(fv) <- rownames(y.old) } 
 
-      r <- list(fv, aic, bic, mse, as.matrix(coeff[-1,,drop=FALSE]), as.matrix(pval[-1,,drop=FALSE]), as.matrix(y.old))
-      names(r) <- c("y.hat","AIC","BIC","MSE","coeff.","p.val.","y")
+      r <- list(fv, aic, aicc, bic, mse, as.matrix(coeff[-1,,drop=FALSE]), as.matrix(pval[-1,,drop=FALSE]), as.matrix(y.old))
+      names(r) <- c("y.hat","AIC","AICc","BIC","MSE","coeff.","p.val.","y")
       class(r) <- "reg"
       return(r)
 

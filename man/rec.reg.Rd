@@ -24,6 +24,7 @@ rec.reg(y,x=NULL,c=NULL)
 \value{class \code{reg} object, \code{\link[base]{list}} of
 \item{$y.hat}{fitted (forecasted) values}
 \item{$AIC}{Akaike Information Criterion (from the current set of observations)}
+\item{$AICc}{Akaike Information Criterion with a correction for finite sample sizes (from the current set of observations)}
 \item{$BIC}{Bayesian Information Criterion (from the current set of observations)} 
 \item{$MSE}{Mean Squared Error (from the current set of observations)}
 \item{$coeff.}{regression coefficients}

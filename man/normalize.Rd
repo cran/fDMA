@@ -30,3 +30,5 @@ nd <- normalize(drivers)
 
 normalize(cbind(c(0,1,2),c(1,2,3),c(0,1,3)))
 }
+
+\seealso{\code{\link{standardize}}}

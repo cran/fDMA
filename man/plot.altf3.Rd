@@ -19,7 +19,10 @@ After executing the command, the User is asked to choose
 
 2 - for plotting p-values (averaged over selected window sizes) for t-test of statistical significance for coefficients from a rolling regression, in separate png files, saved in the current working directory, and moreover, to paste them into one big plot (also saved as a png file in the current working directory),
 
-3 - for plotting weights of all models used in averaging.
+3 - for plotting weights of all models used in averaging,
+
+4 - for plotting expected window size.
+
 
 Chosing 0 exits the \code{plot} command.
 }
