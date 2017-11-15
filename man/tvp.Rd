@@ -62,6 +62,8 @@ t4 <- tvp(y=ld.wti,x=empty,lambda=0.99,V=1)
 
 \references{
 Raftery, A. E., Karny, M., Ettler, P., 2010. Online prediction under model uncertainty via Dynamic Model Averaging: Application to a cold rolling mill. \emph{Technometrics} \bold{52}, 52--66.
+
+Sanderson, C., Curtin, R., 2016. Armadillo: A template-based C++ library for linear algebra. \emph{Journal of Open Source Software} \bold{1}, \url{http://arma.sourceforge.net/armadillo_joss_2016.pdf}.
 }
 
 \seealso{\code{\link{grid.tvp}}, \code{\link{print.tvp}}, \code{\link{summary.tvp}}, \code{\link{plot.tvp}}.}

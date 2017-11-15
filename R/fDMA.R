@@ -123,6 +123,7 @@ if (is.null(initial.period)) { initial.period <- 1 }
 if (! is.numeric(initial.period)) { stop("initial.period must be a number") }
 if ((initial.period <= 0) || (initial.period > length(y))) { stop("initial.period must be greater than or equal to 1, and less than the number of observations") }
 if (is.null(V.meth)) { V.meth <- "rec" }
+if (V.meth == "rec" && !is.null(kappa)) { stop("kappa is used only if V.meth is set to ''ewma''") }
 if (! V.meth %in% c("rec","ewma")) { stop("please, specify correct V.meth") }
 if (V.meth == "ewma" && is.null(kappa)) { stop("please, specify kappa") }
 if (V.meth == "ewma" && ! is.numeric(kappa)) { stop("kappa must be a number") }

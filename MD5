@@ -1,6 +1,7 @@
-12133676af4210733c9d7e7a20226cf1 *DESCRIPTION
-4f9b3d0396188c7c9c59e41899713444 *NAMESPACE
-435deff9635bb6d7cd34b4b9137092b3 *NEWS
+8c10f0e5bafb5672e533ccd226081cac *DESCRIPTION
+7d797ef662bc8430efb9a4c713934f12 *NAMESPACE
+f7f0dec042124d53562483d4a268eb15 *NEWS
+8c7ec55a6e641e2b8e93ab0e6da33fc9 *R/RcppExports.R
 da17ed6a337eed284616db2a230b897a *R/altf.R
 1b297c760e36b5fd3fd45a2ff4c3899b *R/altf2.R
 f2d7b8472f44badda5d87f468657a5b6 *R/altf3.R
@@ -8,7 +9,7 @@ f21e1ff8f2a4130d918d1f672237daf1 *R/altf4.R
 37acaaaf7e31be88a6dc97fb593a05c8 *R/archtest.R
 88abd29b4ee7c012a00b52e8f243232e *R/descstat.R
 9669b8fea8046c2d65f898e53fc3e051 *R/dmtest.R
-e7b658022bbe945f3fbc6aa7fb700985 *R/fDMA.R
+8355a7dcad12ccc89019048655f990d2 *R/fDMA.R
 23ce6ce1709b3cfd8282ec82c0abb54c *R/gNormalize.R
 b5ec537559b8fc87ad840d333ed0234f *R/grid.DMA.R
 f7a99b6c331c3e8ddd44af9fe8cc5a91 *R/grid.roll.reg.R
@@ -17,6 +18,7 @@ ba4555bbc5940f8545da9a3d86e4ea45 *R/hit.ratio.R
 83ec2442fd64aaef8d5d23d19102ec31 *R/hmdmtest.R
 2086134c4739168846bcbc8153e961ca *R/mdmtest.R
 c6992cdec2743b82b467e1f992e7b1dd *R/normalize.R
+e76099dece4d4835e6c6d883a14ed69d *R/onUnload.R
 62cafaafb71e22fae6c9858d5b8e2a6a *R/onevar.R
 83d5e0fd92c5862543f5d74172b10658 *R/plot.altf.R
 bdc74a0f70bab8089cd73d1167a54de6 *R/plot.altf2.R
@@ -52,10 +54,11 @@ dcaa0829459555e783315f18b250bc9f *R/summary.altf3.R
 5fac168ee385bb646040b9efb655e566 *R/summary.grid.tvp.R
 d2b6f4375e874c6eef621b428a50276a *R/summary.reg.R
 6e383e9ddd43692a585df13cbb1395bb *R/summary.tvp.R
-13dd3e5b150bf677ed644753209a3965 *R/tvp.R
+52b3b582e3bb504227f46dc8af81d18e *R/tvp.R
 74010ee62c05475c252569bba22ee4c1 *data/crudeoil.RData
 4b09544d2a029fe7be65b30c2586575f *data/trends.RData
 5aae36069872cf4af6b1f07a34a18cbc *inst/CITATION
+cb41a3d052ea84c225bf0acfd58ef79e *inst/include/fDMA.h
 8a625581ee176ee5c652e95160d52aa9 *man/altf.Rd
 9a40a5081f0787ba8a5e03b0d8d9199b *man/altf2.Rd
 113ab6ccda9d06801d16d8e67e5cad7f *man/altf3.Rd
@@ -109,4 +112,8 @@ dc91ce145891eddeecb1ee5a7c7ef08b *man/summary.grid.tvp.Rd
 e3676d6162ae1cc78142da2e50623d07 *man/summary.reg.Rd
 d9e7d723fe914c45ed72fc1feaf5464c *man/summary.tvp.Rd
 689bf1fc8fd9965c5a2369838a985dec *man/trends.Rd
-763a5a2d992eea9dfda7f342cb0fe0f8 *man/tvp.Rd
+34a266017337a64d5002ee55cf33c29e *man/tvp.Rd
+4d751a816a417548d9de308ba62c3ba7 *src/Makevars
+4d751a816a417548d9de308ba62c3ba7 *src/Makevars.win
+3cecd39c0ded18f866b410268c96cbf2 *src/RcppExports.cpp
+51d3c2154f8d7a109f94ab8c14554220 *src/tvpcpp.cpp

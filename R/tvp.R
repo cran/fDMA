@@ -45,7 +45,6 @@ else
   {
     theta <- matrix(0,ncol=1, nrow=ncol(xe)-1)
   }
-thetas <- theta
 
 if (is.null(W))
 {
@@ -106,9 +105,6 @@ if (!is.null(W))
   E <- diag(W,ncol=1+ncol(x), nrow=1+ncol(x))
 }
 
-y.tvp <- vector()
-pdensi <- vector()
-
 #########################
 #########################
 
@@ -118,39 +114,11 @@ if (c == FALSE)
     E <- E[-1,-1]
   }
 
-for (t in 1:nrow(x))
-{
-  xx <- xe[t,]
-  yhat <- as.numeric(crossprod(xx,theta))
-  ei <- as.numeric(as.vector(y)[t] - yhat)
-  R <- E / lambda
-  tv <- as.numeric(crossprod(xx,R) %*% xx)
-  Vu <- as.numeric(V + tv)
-  E <- R - (R %*% xx) %*%  crossprod(xx,R) / Vu  
-  pdensi[t] <- exp(-0.5 * ei * ei / Vu ) / sqrt(2*pi*Vu)
-  if (is.null(kappa))
-    {
-      temp <- ( (t-1) * V + (ei * ei - tv) ) / t 
-      if (temp>0) 
-        { 
-          theta <- theta + ( R %*% xx ) * ei / (temp + tv) 
-          V <- temp
-        }
-      else 
-        { 
-          theta <- theta + ( R %*% xx ) * ei / Vu 
-        }
-     }
-  else
-     {
-        temp <- V * kappa + (1-kappa) * ei * ei 
-        theta <- theta + ( R %*% xx ) * ei / (temp + tv) 
-     }
-  y.tvp[t] <- yhat
-  thetas <- cbind(thetas,theta)
-}
+tvpcppout <- tvpcpp(x,y,xe,theta,E,lambda,V,kappa)
 
-rm(xx,xe,yhat,ei,R,E,tv,Vu,temp,t,V,theta)
+thetas <- tvpcppout[[1]]
+y.tvp <- tvpcppout[[2]]
+pdensi <- tvpcppout[[3]]
 
 thetas <- t(thetas[,-1])
 if (!is.null(colnames(x))) 
