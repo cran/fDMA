@@ -1,6 +1,7 @@
 useDynLib(fDMA, .registration = TRUE)
 export("altf","altf2","altf3","altf4","archtest","descstat","dmtest","fDMA","gNormalize","grid.DMA","grid.roll.reg","grid.tvp","hit.ratio","hmdmtest","mdmtest","normalize","onevar","rec.reg","roll.reg","standardize","stest","tvp")
-import(doParallel, forecast, foreach, gplots, graphics, grDevices, iterators, MSwM, parallel, png, Rcpp, utils, xts, zoo)
+import(doParallel, forecast, foreach, gplots, graphics, grDevices, iterators, MSwM, parallel, png, Rcpp, xts, zoo)
+import(utils, except = c(.DollarNames, prompt))
 importFrom(psych,describe)
 importFrom(stats,sd)
 importFrom(stats,lm)
