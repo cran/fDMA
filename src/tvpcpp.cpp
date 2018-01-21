@@ -33,6 +33,7 @@ List tvpcpp(mat x, vec y, mat xe, mat theta, mat E, double lambda, double V, Nul
       if (!kappa.isNull())
         {
           temp = V * as<double>(kappa) + ((double)1-as<double>(kappa)) * ei * ei;
+          V = temp;
           theta = theta + ( R * xx ) * ei / (temp + tv);
         }
       else

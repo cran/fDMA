@@ -2,12 +2,12 @@ Package: fDMA
 Type: Package
 Title: Dynamic Model Averaging and Dynamic Model Selection for
         Continuous Outcomes
-Version: 2.2.1
+Version: 2.2.2
 Imports: doParallel, forecast, foreach, gplots, graphics, grDevices,
         iterators, MSwM, parallel, psych, png, Rcpp, stats, tseries,
         utils, xts, zoo
 LinkingTo: Rcpp, RcppArmadillo
-Date: 2017-11-24
+Date: 2018-01-21
 Authors@R: person("Krzysztof", "Drachal", role = c("aut","cre"), email="kdrachal@wne.uw.edu.pl", comment = "Faculty of Economic Sciences, University of Warsaw, Poland")
 Author: Krzysztof Drachal [aut, cre] (Faculty of Economic Sciences, University of Warsaw, Poland)
 Maintainer: Krzysztof Drachal <kdrachal@wne.uw.edu.pl>
@@ -18,6 +18,6 @@ URL: https://CRAN.R-project.org/package=fDMA
 Note: Research funded by the Polish National Science Centre grant under
         the contract number DEC-2015/19/N/HS4/00205.
 NeedsCompilation: yes
-Packaged: 2017-11-24 12:30:03 UTC; Krzysiek
+Packaged: 2018-01-21 11:24:51 UTC; Krzysiek
 Repository: CRAN
-Date/Publication: 2017-11-24 13:03:15 UTC
+Date/Publication: 2018-01-21 17:31:42 UTC

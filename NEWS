@@ -1,3 +1,11 @@
+fDMA ver. 2.2.2 (Release date: 2018-01-21)
+==============
+
+Changes:
+
+* Exponentially weighted moving average variance updating corrected.
+
+
 fDMA ver. 2.2.1 (Release date: 2017-11-24)
 ==============
 
