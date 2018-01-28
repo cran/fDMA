@@ -1,15 +1,15 @@
-aad7ba6a4ae08fb1da2d9b84f9b74b68 *DESCRIPTION
+927ccd82c12514e18441acbbd5cc6202 *DESCRIPTION
 0c4f99151d6b93cfb90443d363aa02c9 *NAMESPACE
-e883d5f6e461093dbf36edb3afd4f124 *NEWS
+dc56a74c3c09211a4aeecd05d5a98cad *NEWS
 8c7ec55a6e641e2b8e93ab0e6da33fc9 *R/RcppExports.R
 da17ed6a337eed284616db2a230b897a *R/altf.R
 1b297c760e36b5fd3fd45a2ff4c3899b *R/altf2.R
 f2d7b8472f44badda5d87f468657a5b6 *R/altf3.R
-f21e1ff8f2a4130d918d1f672237daf1 *R/altf4.R
+a7a29b0105b126f06a9b52b300ce5eaf *R/altf4.R
 37acaaaf7e31be88a6dc97fb593a05c8 *R/archtest.R
 88abd29b4ee7c012a00b52e8f243232e *R/descstat.R
 9669b8fea8046c2d65f898e53fc3e051 *R/dmtest.R
-8355a7dcad12ccc89019048655f990d2 *R/fDMA.R
+4105cabee6d8030fa00c05f9f1d2c100 *R/fDMA.R
 23ce6ce1709b3cfd8282ec82c0abb54c *R/gNormalize.R
 b5ec537559b8fc87ad840d333ed0234f *R/grid.DMA.R
 f7a99b6c331c3e8ddd44af9fe8cc5a91 *R/grid.roll.reg.R
@@ -55,9 +55,12 @@ dcaa0829459555e783315f18b250bc9f *R/summary.altf3.R
 d2b6f4375e874c6eef621b428a50276a *R/summary.reg.R
 6e383e9ddd43692a585df13cbb1395bb *R/summary.tvp.R
 52b3b582e3bb504227f46dc8af81d18e *R/tvp.R
+508b74bbcc43c8d7df27dacc033e37a5 *build/vignette.rds
 74010ee62c05475c252569bba22ee4c1 *data/crudeoil.RData
 4b09544d2a029fe7be65b30c2586575f *data/trends.RData
 5aae36069872cf4af6b1f07a34a18cbc *inst/CITATION
+13284b63eb2b8c4a73388c36a43b07aa *inst/doc/fDMA_vignette.pdf
+38fda7383757e46e121860ea1a161982 *inst/doc/fDMA_vignette.pdf.asis
 cb41a3d052ea84c225bf0acfd58ef79e *inst/include/fDMA.h
 8a625581ee176ee5c652e95160d52aa9 *man/altf.Rd
 9a40a5081f0787ba8a5e03b0d8d9199b *man/altf2.Rd
@@ -117,3 +120,4 @@ d9e7d723fe914c45ed72fc1feaf5464c *man/summary.tvp.Rd
 4d751a816a417548d9de308ba62c3ba7 *src/Makevars.win
 3cecd39c0ded18f866b410268c96cbf2 *src/RcppExports.cpp
 5739b92574c12e29aca60798735b48a2 *src/tvpcpp.cpp
+38fda7383757e46e121860ea1a161982 *vignettes/fDMA_vignette.pdf.asis

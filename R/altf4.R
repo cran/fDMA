@@ -181,7 +181,7 @@ f.thetas <- function(i)
 
 for (t in 1:nrow(x))
   {
-    pi2 <- (pi1^alpha + c2) / (sum((pi1)^alpha) + c2) 
+    pi2 <- (pi1^alpha + c2) / (sum((pi1)^alpha + c2))
     y.pred[t] <- crossprod(pi2,y.roll.ols[t,])
     coeff.av <- t(sapply(seq(length(coeff)),f.thetas))
     if (ncol(x)==0) { coeff.av <- t(coeff.av) }

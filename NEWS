@@ -1,3 +1,12 @@
+fDMA ver. 2.2.3 (Release date: 2018-01-28)
+==============
+
+Changes:
+
+* Vignette added. 
+* Possible zero posterior model probabilities corrected in fDMA() and altf4().
+
+
 fDMA ver. 2.2.2 (Release date: 2018-01-21)
 ==============
 

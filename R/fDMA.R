@@ -377,7 +377,7 @@ f.basicDMA <- function (y,x,alpha,lambda,initvar,W=NULL,kappa=NULL,
       {
         if (is.null(gprob))
           { 
-            pi2 <- (pi1^alpha + c) / (sum((pi1)^alpha) + c) 
+            pi2 <- (pi1^alpha + c) / (sum((pi1)^alpha  + c)) 
           }
         else
           {
@@ -386,7 +386,7 @@ f.basicDMA <- function (y,x,alpha,lambda,initvar,W=NULL,kappa=NULL,
             pi2.g <- pi2.g / len
             pi2.g <- rep(pi2.g,len)
           
-            pi1sum <- sum((pi1)^alpha) + c
+            pi1sum <- sum((pi1)^alpha  + c)
             
             pi2 <- omega * ( (pi1^alpha + c) / pi1sum ) + (1-omega) * pi2.g
             
