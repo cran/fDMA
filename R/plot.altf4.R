@@ -3,28 +3,16 @@
 
 ### requires "png" and "gplots" packages
 
-plot.altf4 <- function(x, ...)
+plot.altf4 <- function(x, non.interactive=NULL, ...)
   {
-    if (requireNamespace('graphics')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>graphics<< is required")
-      }
-   
  
 plot1g <- function(x)
   {
-    
-    if (requireNamespace('png')) 
+    if (is.null(non.interactive)) 
       {
-      } 
-    else 
-      {
-        stop("package >>png<< is required")
+        non.interactive <- FALSE
       }
-
+    
     names <- colnames(x$coeff.[[1]])
     
     inc <- vector()
@@ -73,24 +61,8 @@ plot1g <- function(x)
 
 plot2g <- function(x)
   {
-    if (requireNamespace('gplots')) 
-      { 
-        col <- rich.colors(ncol(x$weights[[1]]), palette="temperature", rgb=FALSE, plot=FALSE) 
-      } 
-    else 
-      {
-        warning("package >>gplots<< is required ::: a plot might be blurred")
-        col <- seq(1:ncol(x$weights[[1]]))
-      }
+    col <- rich.colors(ncol(x$weights[[1]]), palette="temperature", rgb=FALSE, plot=FALSE) 
     
-    if (requireNamespace('png')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>png<< is required")
-      }
-
     inc <- vector()
     inc[1] <- 1
     for (i in 1:7)
@@ -113,13 +85,6 @@ plot2g <- function(x)
 
 plot3g <- function(x)
   {
-    if (requireNamespace('png')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>png<< is required")
-      }
 
     inc <- vector()
     inc[1] <- 1
@@ -137,13 +102,21 @@ plot3g <- function(x)
     axis(1, at=inc, labels=labs)
 
   }
-
-        choices <- c("expected coefficients - separate plots (files in working directory)",
-                     "models' weights",
-                     "expected window size")
-        pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-        switch(pick, plot1g(x), plot2g(x), plot3g(x))
-
+        
+        if (non.interactive == FALSE) 
+          {
+            choices <- c("expected coefficients - separate plots (files in working directory)",
+                         "models' weights",
+                         "expected window size")
+            pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
+            switch(pick, plot1g(x), plot2g(x), plot3g(x))
+          }
+        else
+          {
+            plot1g(x)
+            plot2g(x)
+            plot3g(x)
+          }
  
   }
   

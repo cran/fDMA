@@ -12,17 +12,6 @@ grid.roll.reg <- function (y,x=NULL,grid.window,parallel.grid=NULL,c=NULL)
 
 if (is.null(parallel.grid)) { parallel.grid <- FALSE }
 
-if (parallel.grid == TRUE)
-  {
-    if (requireNamespace('doParallel')) 
-      {
-      } 
-    else 
-      {
-        stop("for parallel computations package >>doParallel<< is required")
-      }
-  }
-
 #############################################
 
 grid.window <- unique(grid.window)

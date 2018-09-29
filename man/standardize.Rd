@@ -20,8 +20,6 @@ standardize(data)
 \value{\code{\link[base]{matrix}}}
 
 \examples{
-data(crudeoil)
-
 standardize(crudeoil)
 }
 

@@ -3,28 +3,17 @@
 
 ### requires "png" and "gplots" packages
 
-plot.altf <- function(x, ...)
+plot.altf <- function(x, non.interactive=NULL, ...)
   {
-    if (requireNamespace('graphics')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>graphics<< is required")
-      }
+if (is.null(non.interactive)) 
+  {
+    non.interactive <- FALSE
+  }
   
 nmods <- length(x$coeff.)
 
 plot1g <- function(x)
   {
-    
-   if (requireNamespace('png')) 
-    {
-    } 
-   else 
-    {
-      stop("package >>png<< is required")
-    }
     
    mm1 <- vector()
    
@@ -55,15 +44,7 @@ plot1g <- function(x)
         }
     }
 
-   if (requireNamespace('gplots')) 
-    { 
-      col <- rich.colors((sum(mm1)+sum(mm2)), palette="temperature", rgb=FALSE, plot=FALSE) 
-    } 
-   else 
-    {
-      warning("package >>gplots<< is required ::: a plot might be blurred")
-      col <- seq(1:(sum(mm1)+sum(mm2)))
-    }
+    col <- rich.colors((sum(mm1)+sum(mm2)), palette="temperature", rgb=FALSE, plot=FALSE) 
      
     plmods1 <- which(mm1==1)
     plmods2 <- which(mm2==1)
@@ -238,14 +219,6 @@ plot1g <- function(x)
 plot2g <- function(x)
   {
     
-    if (requireNamespace('png')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>png<< is required")
-      }
-    
    mm1 <- vector()
    
    for (i in 1:nmods)
@@ -263,15 +236,7 @@ plot2g <- function(x)
    if (sum(mm1)>0)
     {
 
-      if (requireNamespace('gplots')) 
-        { 
-          col <- rich.colors(sum(mm1), palette="temperature", rgb=FALSE, plot=FALSE) 
-        } 
-      else 
-        {
-          warning("package >>gplots<< is required ::: a plot might be blurred")
-          col <- seq(1:sum(mm1))
-        }
+      col <- rich.colors(sum(mm1), palette="temperature", rgb=FALSE, plot=FALSE) 
       
       plmods <- which(mm1==1)
       
@@ -327,12 +292,18 @@ plot2g <- function(x)
     
   }
 
-
-
-        choices <- c("expected coefficients - separate plots (files in working directory)",
-                     "p-values for t-tests - separate plots (files in working directory)")
-        pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-        switch(pick, plot1g(x), plot2g(x))
+        if (non.interactive == FALSE) 
+          {
+            choices <- c("expected coefficients - separate plots (files in working directory)",
+                         "p-values for t-tests - separate plots (files in working directory)")
+            pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
+            switch(pick, plot1g(x), plot2g(x))
+          }
+        else
+          {
+            plot1g(x)
+            plot2g(x)
+          }
 
  
   }

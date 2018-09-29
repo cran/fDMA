@@ -20,7 +20,6 @@ Additionally, it provides mean values of coefficients, min, max and mean relativ
 
 \examples{
 \dontrun{
-data(crudeoil)
 wti <- crudeoil[-1,1]
 drivers <- (lag(crudeoil[,-1],k=1))[-1,]
 a <- altf2(y=wti,x=drivers)

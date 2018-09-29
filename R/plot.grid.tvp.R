@@ -3,15 +3,13 @@
 
 ### requires "png" and "gplots" packages
 
-plot.grid.tvp <- function(x, ...)
+plot.grid.tvp <- function(x, non.interactive=NULL, ...)
   {
-    if (requireNamespace('graphics')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>graphics<< is required")
-      }
+
+if (is.null(non.interactive)) 
+  {
+    non.interactive <- FALSE
+  }
    
 plot1g <- function(x)
   {
@@ -27,24 +25,8 @@ plot2g <- function(x)
  
 plot3g <- function(x)
   {
-    if (requireNamespace('gplots')) 
-      { 
-        col <- rich.colors(nrow(x$fq)+1, palette="temperature", rgb=FALSE, plot=FALSE) 
-      } 
-    else 
-      {
-        warning("package >>gplots<< is required ::: a plot might be blurred")
-        col <- seq(1:(nrow(x$fq)+1))
-      }
+    col <- rich.colors(nrow(x$fq)+1, palette="temperature", rgb=FALSE, plot=FALSE) 
     
-    if (requireNamespace('png')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>png<< is required")
-      }
-
     names <- colnames(x$models[[1]]$thetas)
     
     inc <- vector()
@@ -107,11 +89,20 @@ plot3g <- function(x)
         }
       dev.off()
   }
-  
-        choices <- c("RMSE", "MAE",
-                     "coefficients - separate plots (files in working directory)" )
-        pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-        switch(pick, plot1g(x), plot2g(x), plot3g(x))
+
+        if (non.interactive == FALSE) 
+          {
+            choices <- c("RMSE", "MAE",
+                         "coefficients - separate plots (files in working directory)" )
+            pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
+            switch(pick, plot1g(x), plot2g(x), plot3g(x))
+          }
+        else
+          {
+            plot1g(x)
+            plot2g(x)
+            plot3g(x)
+          }
  
   }
   

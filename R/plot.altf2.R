@@ -3,38 +3,20 @@
 
 ### requires "png" and "gplots" packages
 
-plot.altf2 <- function(x, ...)
+plot.altf2 <- function(x, non.interactive=NULL, ...)
   {
-    if (requireNamespace('graphics')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>graphics<< is required")
-      }
-   
+
+if (is.null(non.interactive)) 
+  {
+    non.interactive <- FALSE
+  }
+  
 nmods <- length(x$y.hat)
 
 plot1g <- function(x)
   {
     
-    if (requireNamespace('png')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>png<< is required")
-      }
-
-    if (requireNamespace('gplots')) 
-      { 
-        col <- rich.colors(nmods, palette="temperature", rgb=FALSE, plot=FALSE) 
-      } 
-    else 
-      {
-        warning("package >>gplots<< is required ::: a plot might be blurred")
-        col <- seq(1:nmods)
-      }
+    col <- rich.colors(nmods, palette="temperature", rgb=FALSE, plot=FALSE) 
 
     names <- colnames(x$coeff.[[1]])
     
@@ -130,23 +112,7 @@ plot1g <- function(x)
 plot2g <- function(x)
   {
     
-    if (requireNamespace('png')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>png<< is required")
-      }
-
-    if (requireNamespace('gplots')) 
-      { 
-        col <- rich.colors(nmods, palette="temperature", rgb=FALSE, plot=FALSE) 
-      } 
-    else 
-      {
-        warning("package >>gplots<< is required ::: a plot might be blurred")
-        col <- seq(1:nmods)
-      }
+    col <- rich.colors(nmods, palette="temperature", rgb=FALSE, plot=FALSE) 
 
     names <- colnames(x$coeff.[[1]])
     
@@ -229,23 +195,7 @@ plot2g <- function(x)
 plot3g <- function(x)
   {
     
-    if (requireNamespace('png')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>png<< is required")
-      }
-
-    if (requireNamespace('gplots')) 
-      { 
-        col <- rich.colors(ncol(x$weights[[1]]), palette="temperature", rgb=FALSE, plot=FALSE) 
-      } 
-    else 
-      {
-        warning("package >>gplots<< is required ::: a plot might be blurred")
-        col <- seq(1:ncol(x$weights[[1]]))
-      }
+    col <- rich.colors(ncol(x$weights[[1]]), palette="temperature", rgb=FALSE, plot=FALSE) 
 
     names <- names(x$weights)
     
@@ -309,23 +259,7 @@ plot3g <- function(x)
 plot4g <- function(x)
   {
     
-    if (requireNamespace('png')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>png<< is required")
-      }
-
-    if (requireNamespace('gplots')) 
-      { 
-        col <- rich.colors(nmods, palette="temperature", rgb=FALSE, plot=FALSE) 
-      } 
-    else 
-      {
-        warning("package >>gplots<< is required ::: a plot might be blurred")
-        col <- seq(1:nmods)
-      }
+    col <- rich.colors(nmods, palette="temperature", rgb=FALSE, plot=FALSE) 
 
     names <- colnames(x$coeff.[[1]])
     
@@ -391,23 +325,7 @@ plot4g <- function(x)
 plot5g <- function(x)
   {
     
-    if (requireNamespace('png')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>png<< is required")
-      }
-
-    if (requireNamespace('gplots')) 
-      { 
-        col <- rich.colors(nmods, palette="temperature", rgb=FALSE, plot=FALSE) 
-      } 
-    else 
-      {
-        warning("package >>gplots<< is required ::: a plot might be blurred")
-        col <- seq(1:nmods)
-      }
+    col <- rich.colors(nmods, palette="temperature", rgb=FALSE, plot=FALSE) 
 
     names <- names(x$weights)
     
@@ -442,15 +360,24 @@ plot5g <- function(x)
   }
 
 
-
-        choices <- c("expected coefficients - separate plots (files in working directory)",
-                     "p-values for t-tests - separate plots (files in working directory)",
-                     "models' weights - separate plots (files in working directory)",
-                     "relative variable importance (files in working directory)",
-                     "expected number of variables (incl. constant)")
-        pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-        switch(pick, plot1g(x), plot2g(x), plot3g(x), plot4g(x), plot5g(x))
-
+        if (non.interactive == FALSE) 
+          {
+            choices <- c("expected coefficients - separate plots (files in working directory)",
+                         "p-values for t-tests - separate plots (files in working directory)",
+                         "models' weights - separate plots (files in working directory)",
+                         "relative variable importance (files in working directory)",
+                         "expected number of variables (incl. constant)")
+            pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
+            switch(pick, plot1g(x), plot2g(x), plot3g(x), plot4g(x), plot5g(x))
+          }
+        else
+          {
+            plot1g(x)
+            plot2g(x)
+            plot3g(x)
+            plot4g(x)
+            plot5g(x)
+          }
  
   }
   

@@ -32,7 +32,6 @@ tvp(y,x,V,lambda,W=NULL,kappa=NULL,c=NULL)
 }
 
 \examples{
-data(crudeoil)
 wti <- crudeoil[-1,1]
 drivers <- (lag(crudeoil[,-1],k=1))[-1,]
 ld.wti <- (diff(log(wti)))[-1,]

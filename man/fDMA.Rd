@@ -4,13 +4,15 @@
 \title{Computes Dynamic Model Averaging.}
 
 \description{
-The function estimates Dynamic Model Averaging (and some of its variations). The method is described in Raftery et al. (2010). 
+The function estimates Dynamic Model Averaging (and some of its variations). The method is described in Raftery et al. (2010).
 }
 
 \usage{
-fDMA(y,x,alpha,lambda,initvar,W=NULL,initial.period=NULL,V.meth=NULL,kappa=NULL, 
-gprob=NULL,omega=NULL,model=NULL,parallel=NULL,m.prior=NULL,mods.incl=NULL, 
-DOW=NULL,DOW.nmods=NULL,DOW.type=NULL,DOW.limit.nmods=NULL,progress.info=NULL,bm=NULL)
+fDMA(y,x,alpha,lambda,initvar,W=NULL,initial.period=NULL,V.meth=NULL,kappa=NULL,
+gprob=NULL,omega=NULL,model=NULL,parallel=NULL,m.prior=NULL,mods.incl=NULL,
+DOW=NULL,DOW.nmods=NULL,DOW.type=NULL,DOW.limit.nmods=NULL,progress.info=NULL,
+forced.models=NULL,forbidden.models=NULL,forced.variables=NULL,bm=NULL,
+small.c=NULL,fcores=NULL,mods.check=NULL,red.size=NULL,av=NULL)
 }
 
 \arguments{
@@ -32,24 +34,35 @@ DOW=NULL,DOW.nmods=NULL,DOW.type=NULL,DOW.limit.nmods=NULL,progress.info=NULL,bm
 \item{DOW}{optional, \code{\link[base]{numeric}}, a threshold for Dynamic Occam's Window (Onorante and Raftery, 2016), should be a number between 0 and 1, if \code{DOW=0}, then no Dynamic Occam's Window is applied, by default \code{DOW=0}, Dynamic Occam's Window can be applied only to Dynamic Model Averaging, i.e., when \code{model="dma"}}
 \item{DOW.nmods}{optional, \code{\link[base]{numeric}}, initial number of models for Dynamic Occam's Window, should be less than the number of all possible models and larger than or equal to 2, they are randomly chosen, if \code{DOW.nmods=0}, then initially models with exactly one variable are taken, by default \code{DOW.nmods=0}}
 \item{DOW.type}{optional, \code{DOW.type="r"} corresponds to DMA-R from Onorante and Raftery (2016), \code{DOW.type="e"} to DMA-E, by default \code{DOW.type="r"}}
-\item{DOW.limit.nmods}{optional, \code{\link[base]{numeric}}, maximum number of models selected by Dynamic Occam's Window, an additional limitation to the threshold given by \code{DOW}, by default no limit is set} 
+\item{DOW.limit.nmods}{optional, \code{\link[base]{numeric}}, maximum number of models selected by Dynamic Occam's Window, an additional limitation to the threshold given by \code{DOW}, by default no limit is set}
 \item{progress.info}{optional, \code{\link[base]{logical}}, applicable only if Dynamic Occam's Window is used, otherwise ignored, if \code{progress.info=TRUE} number of the current recursive DMA computation round and number of models selected for this round are printed, by default \code{progress.info=FALSE}}
+\item{forced.models}{optional, \code{\link[base]{matrix}}, applicable only if Dynamic Occam's Window is used, otherwise ignored, indicates models that have to be always included in the set of expanded models, similar as \code{mods.incl}, by default \code{forced.models=NULL}}
+\item{forbidden.models}{optional, \code{\link[base]{matrix}}, applicable only if Dynamic Occam's Window is used, otherwise ignored, indicates models that cannot be used in the set of expanded models, similar as \code{mods.incl}, by default \code{forbidden.models=NULL}}
+\item{forced.variables}{optional, \code{\link[base]{vector}}, applicable only if Dynamic Occam's Window is used, otherwise ignored, indicates variables that have to be always included in models constituting the set of expanded models, similar as \code{mods.incl}, first slot indicates inclusion of constant, by default \code{forced.variables=NULL}}
 \item{bm}{optional, \code{\link[base]{logical}}, indicate whether benchmark forecast should be computed, these benchmarks are naive forecast (all forecasts are set to be the value of the last observation) and Auto Arima \code{\link[forecast]{auto.arima}}, by default \code{bm=FALSE}}
+\item{small.c}{optional, \code{\link[base]{numeric}}, small constant added to posterior model proabilities as in Raftery et al. (2010) to prevent potential reduction them to 0 due to the computational issues, if not specified the value computed as in Raftery et al. (2010) is taken}
+\item{fcores}{optional, \code{\link[base]{numeric}}, used only if \code{parallel=TRUE}, otherwise ignored, indicates the number of cores that should not be used, by default \code{fcores=1}}
+\item{mods.check}{optional, \code{\link[base]{logical}}, indicates if \code{mods.incl} should be checked for duplicated entries, etc., by default \code{mods.check=FALSE}}
+\item{red.size}{optional, \code{\link[base]{logical}}, indicates if outcomes should be reduced to save memory, by default \code{red.size=FALSE}} 
+\item{av}{optional, \code{av="dma"} corresponds to the original DMA averaging scheme, \code{av="mse"} corresponds to averaging based on Mean Squared Error, \code{av="hr1"} corresponds to averaging based on Hit Ratio, assuming time-series are in levels, \code{av="hr2"} corresponds to averaging based on Hit Ratio, assuming time-series represent changes, by default \code{av="dma"}}
 }
 
-\details{It is possible to use \code{\link[base]{numeric}} \code{\link[base]{vector}} for \code{lambda}. Its values are automatically ordered in descending order and if numbers are not unique they are reduced to become unique. If more than one value is given for \code{lambda}, then model state space, i.e., \code{mods.incl}, is expanded by considering all these models with given values of \code{lambda}. The outcomes are then ordered by columns in a way that first outcomes from models with first value of \code{lambda} are presented, then from models with second value of \code{lambda}, etc. (Raftery et al., 2010).}
+\details{It is possible to use \code{\link[base]{numeric}} \code{\link[base]{vector}} for \code{lambda}. Its values are automatically ordered in descending order and if numbers are not unique they are reduced to become unique. If more than one value is given for \code{lambda}, then model state space, i.e., \code{mods.incl}, is expanded by considering all these models with given values of \code{lambda}. The outcomes are then ordered by columns in a way that first outcomes from models with first value of \code{lambda} are presented, then from models with second value of \code{lambda}, etc. (Raftery et al., 2010).
+
+If \code{nrow(gprob)<length(y)}, then the method by Koop and Onorante (2014) is used for the last \code{nrow(gprob)} observations. For the preceding ones the original method by Raftery et al. (2010) is used. In such case a \code{warning} is generated.
+}
 
 \value{class \code{dma} object, \code{\link[base]{list}} of
 \item{$y.hat}{forecasted values}
-\item{$post.incl}{posteriori inclusion probabilities for independent variables}
+\item{$post.incl}{posterior inclusion probabilities for independent variables}
 \item{$MSE}{Mean Squared Error of forecast}
-\item{$MAE}{Mean Absolute Error of forecast} 
+\item{$MAE}{Mean Absolute Error of forecast}
 \item{$models}{models included in estimations, or models used in the last step of Dynamic Occam's Window method (if this method has been selected)}
-\item{$post.mod}{posteriori probabilities of all used models, or \link{NA} if Dynamic Occam's Window method has been selected}
+\item{$post.mod}{posterior probabilities of all used models, or \link{NA} if Dynamic Occam's Window method has been selected}
 \item{$exp.var}{expected number of variables (incl. constant)}
 \item{$exp.coef.}{expected values of regression coefficients}
-\item{$parameters}{parameters of the estimated model} 
-\item{$yhat.all.mods}{predictions from every sub-model used in estimations} 
+\item{$parameters}{parameters of the estimated model}
+\item{$yhat.all.mods}{predictions from every sub-model used in estimations}
 \item{$y}{\code{y}, dependent variable}
 \item{$benchmarks}{Root Mean Squared Error and Mean Absolute Error of naive and auto ARIMA forecast}
 \item{$DOW.init.mods}{models initially selected to Dynamic Occam's Window, if this method has been selected}
@@ -59,7 +72,6 @@ DOW=NULL,DOW.nmods=NULL,DOW.type=NULL,DOW.limit.nmods=NULL,progress.info=NULL,bm
 }
 
 \examples{
-data(crudeoil)
 wti <- crudeoil[-1,1]
 drivers <- (lag(crudeoil[,-1],k=1))[-1,]
 ld.wti <- (diff(log(wti)))[-1,]
@@ -78,7 +90,6 @@ mod3 <- fDMA(y=ld.wti[1:20,1],x=s,alpha=0.99,lambda=0.90,initvar=10,V.meth="ewma
 mod4 <- fDMA(y=ld.wti[1:20,1],x=s,alpha=0.99,lambda=0.90,initvar=10,DOW=0.7)
 }
 # Google trends are available since 2004
-data(trends)
 \dontrun{
 gp <- trends/100
 s <- ld.drivers['2004-01-01/']
@@ -123,12 +134,15 @@ Eicher, T. S., Papageorgiou, C., Raftery, A. E., 2011. Default priors and predic
 
 Koop, G., Korobilis, D., 2012. Forecasting inflation using Dynamic Model Averaging. \emph{International Economic Review} \bold{53}, 867--886.
 
+Koop, G., Korobilis, D., 2018. Variational Bayes inference in high-dimensional time-varying parameter models. \url{https://arxiv.org/pdf/1809.03031}
+
 Koop, G., Onorante, L., 2014. Macroeconomic nowcasting using Google probabilities. \url{https://goo.gl/ATsBN9}
 
 Mitchell, T. J., Beauchamp, J. J., 1988. Bayesian variable selection in linear regression (with discussion). \emph{Journal of the American Statistical Association} \bold{83}, 1023--1036.
 
-Onorante, L., Raftery, A. E., 2016. Dynamic model averaging in large model spaces using
-dynamic Occam's window. \emph{European Economic Review} \bold{81}, 2--14.
+Onorante, L., Raftery, A. E., 2016. Dynamic model averaging in large model spaces using dynamic Occam's window. \emph{European Economic Review} \bold{81}, 2--14.
+
+Yin, X., Peng, J., Tang, T., 2018. Improving the forecasting accuracy of crude oil prices. \emph{Sustainability} \bold{10}, 454. \url{https://doi.org/10.3390/su10020454}
 }
 
-\seealso{\code{\link{grid.DMA}}, \code{\link{print.dma}}, \code{\link{summary.dma}}, \code{\link{plot.dma}}.}
+\seealso{\code{\link{grid.DMA}}, \code{\link{print.dma}}, \code{\link{summary.dma}}, \code{\link{plot.dma}}, \code{\link{hit.ratio}}.}

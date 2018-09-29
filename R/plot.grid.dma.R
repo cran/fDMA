@@ -3,16 +3,14 @@
 
 ### requires "png" and "gplots" packages
 
-plot.grid.dma <- function(x, ...)
+plot.grid.dma <- function(x, non.interactive=NULL, ...)
   {
-    if (requireNamespace('graphics')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>graphics<< is required")
-      }
-   
+
+if (is.null(non.interactive)) 
+  {
+    non.interactive <- FALSE
+  }
+ 
 plot1g <- function(x)
   {
     if ( ((ncol(x$RMSE)>=2) && (nrow(x$RMSE)>=2)) && is.na(charmatch("c",paste(rownames(x$RMSE), collapse = ""))) )
@@ -43,24 +41,8 @@ plot2g <- function(x)
  
 plot3g <- function(x)
   {
-    if (requireNamespace('gplots')) 
-      { 
-        col <- rich.colors((length(x$models)*length(x$models[[1]])), palette="temperature", rgb=FALSE, plot=FALSE) 
-      } 
-    else 
-      {
-        warning("package >>gplots<< is required ::: a plot might be blurred")
-        col <- seq(1:((length(x$models)*length(x$models[[1]]))))
-      }
+    col <- rich.colors((length(x$models)*length(x$models[[1]])), palette="temperature", rgb=FALSE, plot=FALSE) 
     
-    if (requireNamespace('png')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>png<< is required")
-      }
-
     names <- colnames(x[[1]][[1]][[1]]$post.incl)
     
     inc <- vector()
@@ -117,23 +99,7 @@ plot3g <- function(x)
 
 plot4g <- function(x)
   {
-    if (requireNamespace('gplots')) 
-      { 
-        col <- rich.colors((length(x$models)*length(x$models[[1]])), palette="temperature", rgb=FALSE, plot=FALSE) 
-      } 
-    else 
-      {
-        warning("package >>gplots<< is required ::: a plot might be blurred")
-        col <- seq(1:((length(x$models)*length(x$models[[1]]))))
-      }
-    
-    if (requireNamespace('png')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>png<< is required")
-      }
+    col <- rich.colors((length(x$models)*length(x$models[[1]])), palette="temperature", rgb=FALSE, plot=FALSE) 
 
     names <- colnames(x[[1]][[1]][[1]]$exp.coef.)
     
@@ -208,17 +174,36 @@ plot4g <- function(x)
   
 if (x$models[[1]][[1]]$parameters[4]=="DMA")
       {
-        choices <- c("RMSE", "MAE","posterior inclusion probabilities - separate plots (files in working directory)",
-                     "expected coefficients - separate plots (files in working directory)" )
-        pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-        switch(pick, plot1g(x), plot2g(x), plot3g(x), plot4g(x))
+        if (non.interactive == FALSE) 
+          {
+            choices <- c("RMSE", "MAE","posterior inclusion probabilities - separate plots (files in working directory)",
+                         "expected coefficients - separate plots (files in working directory)" )
+            pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
+            switch(pick, plot1g(x), plot2g(x), plot3g(x), plot4g(x))
+          }
+        else
+          {
+            plot1g(x)
+            plot2g(x)
+            plot3g(x)
+            plot4g(x)
+          }
       }
 else
       {
-        choices <- c("RMSE", "MAE",
-                     "expected coefficients - separate plots (files in working directory)" )
-        pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-        switch(pick, plot1g(x), plot2g(x), plot4g(x))
+        if (non.interactive == FALSE) 
+          {
+            choices <- c("RMSE", "MAE",
+                         "expected coefficients - separate plots (files in working directory)" )
+            pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
+            switch(pick, plot1g(x), plot2g(x), plot4g(x))
+          }
+        else
+          {
+            plot1g(x)
+            plot2g(x)
+            plot4g(x)
+          }
       }
 
  

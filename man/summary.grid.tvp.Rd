@@ -19,7 +19,6 @@ Additionally, it finds the model minimizing Root Mean Squared Error (RMSE) and m
 }
 
 \examples{
-data(crudeoil)
 wti <- crudeoil[-1,1]
 drivers <- (lag(crudeoil[,-1],k=1))[-1,]
 ld.wti <- (diff(log(wti)))[-1,]

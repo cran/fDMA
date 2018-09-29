@@ -28,25 +28,27 @@ List tvpcpp(mat x, vec y, mat xe, mat theta, mat E, double lambda, double V, Nul
       tv = as_scalar((xx.t() * R) * xx);
       Vu = V + tv;
       E = R - (R * xx) *  (xx.t() * R) / Vu;
-      pdensi(t) = exp(-0.5 * ei * ei / Vu ) / sqrt(2*PI*Vu);
-
+      if (Vu>0)
+        {
+          pdensi(t) = exp(-0.5 * ei * ei / Vu ) / sqrt(2*M_PI*Vu);
+        }
+      else
+        {
+          pdensi(t) = exp(-0.5 * ei * ei / V ) / sqrt(2*M_PI*V);
+        }
+      
+      theta = theta + ( R * xx ) * ei / Vu;
+      
       if (!kappa.isNull())
         {
-          temp = V * as<double>(kappa) + ((double)1-as<double>(kappa)) * ei * ei;
-          V = temp;
-          theta = theta + ( R * xx ) * ei / (temp + tv);
+          V = V * as<double>(kappa) + ((double)1-as<double>(kappa)) * ei * ei;
         }
       else
         {
           temp = ( t * V + (ei * ei - tv) ) / (t+1);
           if (temp>0)
            {
-             theta = theta + ( R * xx ) * ei / (temp + tv);
              V = temp;
-           }
-          else
-           {
-             theta = theta + ( R * xx ) * ei / Vu;
            }
         }
 

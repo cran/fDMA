@@ -17,7 +17,6 @@ The function prints Root Mean Squared Error (RMSE) and Mean Absolute Error (MAE)
 }
 
 \examples{
-data(crudeoil)
 wti <- crudeoil[-1,1]
 drivers <- (lag(crudeoil[,-1],k=1))[-1,]
 ld.wti <- (diff(log(wti)))[-1,]

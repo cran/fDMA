@@ -5,10 +5,11 @@
 
 \description{The function plots selected outcomes from \code{tvp} object.}
 
-\usage{\method{plot}{tvp}(x, ...)}
+\usage{\method{plot}{tvp}(x,non.interactive=NULL, ...)}
 
 \arguments{
 \item{x}{an object of \code{tvp} class}
+\item{non.interactive}{optional, \code{\link[base]{logical}}, indicate whether plots should be made in non-interactive mode, by default \code{non.interactive=FALSE}, i.e., the user specifies in the interactive menu which plots will be made}
 \item{...}{not used}
 }
 
@@ -24,6 +25,8 @@ After executing the command, the User is asked to choose
 4 - for plotting regression coefficients in separate png files, saved in the current working directory, and moreover, to paste them into one big plot (also saved as a png file in the current working directory).
 
 Chosing 0 exits the \code{plot} command.
+
+If \code{non.interactive=TRUE} all the above plots are made.
 }
 
 \note{
@@ -34,7 +37,6 @@ If \code{\link[grDevices]{graphics.off}} is not executed before plotting \code{t
 
 \examples{
 \dontrun{
-data(crudeoil)
 wti <- crudeoil[-1,1]
 drivers <- (lag(crudeoil[,-1],k=1))[-1,]
 ld.wti <- (diff(log(wti)))[-1,]

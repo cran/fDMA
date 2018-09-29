@@ -50,14 +50,14 @@ summary.altf <- function(object, ...)
       if (is.null(c))
         {
           c <- round(x$coeff.[[j]],digits=4)
-          print(c)
+          print(c,quote=FALSE)
           cat("\n")
         }
       else
         {
           c <- rbind(c,x$coeff.[[j]])
           c <- round(c,digits=4)
-          print(c)
+          print(c,quote=FALSE)
           cat("\n")
         }
     }
@@ -66,7 +66,7 @@ summary.altf <- function(object, ...)
       if (! is.null(c))
         {
           c <- round(c,digits=4)
-          print(c)
+          print(c,quote=FALSE)
           cat("\n")
         }
     }
@@ -116,7 +116,7 @@ summary.altf <- function(object, ...)
         }
       rownames(c) <- names(x$coeff.[m1.r])
       c <- round(c,digits=4)
-      print(c)
+      print(c,quote=FALSE)
       cat("\n")
     }
     
@@ -128,14 +128,14 @@ summary.altf <- function(object, ...)
         {
           c <- round(x$coeff.[[j]],digits=4)
           rownames(c) <- c("auto ARIMA")
-          print(c)
+          print(c,quote=FALSE)
           cat("\n")
         }
       else
         {
           c <- round(x$coeff.[[j]],digits=4)
           rownames(c) <- c("auto ARIMA")
-          print(c)
+          print(c,quote=FALSE)
           cat("\n")
         }
     }
@@ -172,9 +172,9 @@ summary.altf <- function(object, ...)
          rownames(vv) <- c("0.01","0.05","0.10")
          temp <- names(x$p.val)[k]
          names(temp) <- c("")
-         print(temp)
+         print(temp,quote=FALSE)
          cat("\n")
-         print(vv)
+         print(vv,quote=FALSE)
          cat("\n")
        }
       if (names(x$p.val.)[k] == c("MS"))
@@ -201,9 +201,9 @@ summary.altf <- function(object, ...)
              rownames(vv) <- c("0.01","0.05","0.10")
              temp <- paste(names(x$p.val)[k],"Regime",as.character(j))
              names(temp) <- c("")
-             print(temp)
+             print(temp,quote=FALSE)
              cat("\n")
-             print(vv)
+             print(vv,quote=FALSE)
              cat("\n")
           }
        }
@@ -214,5 +214,6 @@ summary.altf <- function(object, ...)
    cat("\n")
    cat("Forecast quality measures: ")
    cat("\n")
-   print(x$summary)
+   print(x$summary,quote=FALSE)
+   cat("\n")
   }

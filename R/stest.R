@@ -3,14 +3,6 @@ stest <- function(data)
   {
     ### data - a matrix or xts object 
 
-    if (requireNamespace('tseries')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>tseries<< is required")
-      }
-
     if (missing(data)) { stop("please, specify data") }
     if (! is.matrix(data)) 
       { 

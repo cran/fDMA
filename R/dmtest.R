@@ -11,13 +11,6 @@ dmtest <- function(y,f)
     ###     first row should correspond to the selected forecast (predicted values),
     ###     next rows should correspond to the alternative forecasts (predicted values) 
     
-    if (requireNamespace('forecast')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>forecast<< is required")
-      }
 
     if (missing(f)) { stop("please, specify f") }
     if (! is.matrix(f)) 

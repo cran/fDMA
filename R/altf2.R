@@ -3,8 +3,8 @@ altf2 <- function (y,x,mods.incl=NULL,gprob=NULL,omega=NULL,av=NULL,window=NULL,
   {
 
 ### computes some forecast quality measures for some alternative forecasts
-### similar to altf() 
- 
+### similar to altf()
+
 ### requires "forecast", "parallel", "stats" and "xts" packages
 
 ### y - a numeric or a column matrix of a dependent variable,
@@ -13,7 +13,7 @@ altf2 <- function (y,x,mods.incl=NULL,gprob=NULL,omega=NULL,av=NULL,window=NULL,
 
 ### mods.incl - a matrix indicating which models are used in averaging,
 ###             similar as in fDMA(),
-###             if not specified, all possible models are used 
+###             if not specified, all possible models are used
 
 ### gprob - a matrix of Google probabilities, columns should correspond to columns of x
 
@@ -24,7 +24,7 @@ altf2 <- function (y,x,mods.incl=NULL,gprob=NULL,omega=NULL,av=NULL,window=NULL,
 ###      "ord" - each model is given the same weight,
 ###      "aic" - information-theoretic model averaging based on Akaike Information Criterion,
 ###      "aicc" - information-theoretic model averaging based on Akaike information Criterion with a correction for finite sample sizes,
-###      "bic" - model averaging based on Bayesian Information Criterion, 
+###      "bic" - model averaging based on Bayesian Information Criterion,
 ###      "mse" - weights are computed according to Mean Squared Error (MSE)
 ###      if not specified, by default "ord" is used
 
@@ -47,33 +47,33 @@ altf2 <- function (y,x,mods.incl=NULL,gprob=NULL,omega=NULL,av=NULL,window=NULL,
 ###            by default parallel = FALSE
 
 
-### checking initial data 
+### checking initial data
 
 if (missing(y)) { stop("please, specify y") }
 if (missing(x)) { stop("please, specify x") }
 if (! (is.numeric(y) || is.matrix(y))) { stop("y must be numeric or matrix") }
 if (is.matrix(y) && ! (ncol(y) == 1)) { stop("y must be a one column matrix") }
 if (! is.matrix(x)) { stop("x must be a matrix") }
-if (is.null(colnames(x))) 
-  { 
+if (is.null(colnames(x)))
+  {
     colnames(x) <- colnames(x, do.NULL = FALSE, prefix = "X")
-    warning('column names of x were automatically created') 
+    warning('column names of x were automatically created')
   }
 if (anyNA(colnames(x))) { stop("x must have column names") }
-if (is.matrix(y) && is.null(colnames(y))) 
-  { 
-    warning('column name of y was automatically created') 
-    colnames(y) <- colnames(y, do.NULL = FALSE, prefix = "Y") 
+if (is.matrix(y) && is.null(colnames(y)))
+  {
+    warning('column name of y was automatically created')
+    colnames(y) <- colnames(y, do.NULL = FALSE, prefix = "Y")
   }
-if (is.matrix(y) && anyNA(colnames(y))) 
-  { 
-    warning('column name of y was automatically created') 
-    colnames(y) <- "Y1" 
+if (is.matrix(y) && anyNA(colnames(y)))
+  {
+    warning('column name of y was automatically created')
+    colnames(y) <- "Y1"
   }
 if (! length(y) == nrow(x)) { stop("y and x must have the same number of observations") }
 if (anyNA(y)) { stop("missing values in y") }
 if (anyNA(x)) { stop("missing values in x") }
-if (is.null(mods.incl)) 
+if (is.null(mods.incl))
   {
     mods.incl <- expand.grid(rep.int(list(0:1), ncol(x)))
     mods.incl <- as.matrix(cbind(rep.int(1,nrow(mods.incl)),mods.incl))
@@ -98,30 +98,15 @@ if (!(is.numeric(window))) { stop("window must be numeric") }
 if ((window < 0) || (window > length(y))) { stop("window must be a positive number less then the total number of observations") }
 if (length(y) < 3) { stop("time-series too short: there have to be more than 3 observations") }
 if (is.null(initial.period)) { initial.period <- 1 }
-if (! is.numeric(initial.period)) { stop("initial.period must be a number") }
+if (! is.numeric(initial.period)) { stop("initial.period must be numeric") }
 if ((initial.period <= 0) || (initial.period > length(y))) { stop("initial.period must be greater than or equal to 1, and less than the number of observations") }
 if (is.null(d)) { d <- FALSE }
 if (! is.logical(d)) { stop("d must be logical, i.e., TRUE or FALSE") }
 if (is.null(f)) { f <- rep(TRUE,4) }
-if (requireNamespace('forecast')) { } else { stop('package >>forecast<< is required') }
-if (requireNamespace('stats')) { } else { stop('package >>stats<< is required') }
-requireNamespace('xts')
 if (is.null(av)) { av <- "ord" }
 if (! av %in% c("ord","aic","aicc","bic","mse")) { stop("please, specify correct models averaging method") }
 if (is.null(parallel)) { parallel <- FALSE }
 if (! is.logical(parallel)) { stop("parallel must be logical, i.e., TRUE or FALSE") }
-if (parallel == TRUE)
-  {
-    if (requireNamespace('parallel')) 
-      {
-      } 
-    else 
-      {
-        stop("for parallel computations package >>parallel<< is required")
-      }
-  }
-
-
 
 y <- as.matrix(y)
 x <- as.matrix(x)
@@ -150,7 +135,7 @@ f.gprob <- function(i)
       {
         p1 <- gprob[,which(mods.incl[i,-1,drop=FALSE]==1),drop=FALSE]
         gp1 <- apply(p1, 1, prod)
-        gp1[gp1==0] <- 0.0001
+        gp1[gp1==0] <- 0.001 * (1/(2^ncol(mods.incl)))
       }
     else
       {
@@ -160,18 +145,28 @@ f.gprob <- function(i)
       {
         p2 <- 1-gprob[,which(mods.incl[i,-1,drop=FALSE]==0),drop=FALSE]
         gp2 <- apply(p2, 1, prod)
-        gp2[gp2==0] <- 0.0001
+        gp2[gp2==0] <- 0.001 * (1/(2^ncol(mods.incl)))
       }
     else
       {
-        gp2 <- matrix(1,ncol=1,nrow=nrow(gprob)) 
+        gp2 <- matrix(1,ncol=1,nrow=nrow(gprob))
       }
 
     return( gp1 * gp2 )
   }
 
 gprob.old <- gprob
-if (!is.null(gprob)) { gprob.old <- as.matrix(gprob.old) } 
+if (!is.null(gprob)) { gprob.old <- as.matrix(gprob.old) }
+
+if (! is.null(gprob))
+  {
+    gprob.ind <- nrow(x) - nrow(gprob) + 1
+  }
+else
+  {
+    gprob.ind <- nrow(x) + 1
+  }
+if ( ! is.null(gprob) && !(length(y) == nrow(gprob)) ) { warning("time-series of gprob and x differ in length") }
 
 ######################### OLS
 ##################################################
@@ -199,7 +194,7 @@ f.ols <- function(i)
       {
         m <- lm(y ~ 1)
       }
-    
+
     fv <- m$fitted.values
     aic <- AIC(m)
     n.par <- length(ind) + c + 1
@@ -246,34 +241,34 @@ else
     y.ols <- lapply(seq(nrow(mods.incl)),f.ols)
   }
 
-if (av == "ord") 
-  { 
-    w <- rep.int(1 / nrow(mods.incl),nrow(mods.incl)) 
+if (av == "ord")
+  {
+    w <- rep.int(1 / nrow(mods.incl),nrow(mods.incl))
   }
-if (av == "aic") 
-  { 
-    w <- sapply(y.ols,"[[",2) 
+if (av == "aic")
+  {
+    w <- sapply(y.ols,"[[",2)
     w <- w - min(w)
     w <- exp(-w / 2)
     w <- w / sum(w)
   }
-if (av == "aicc") 
-  { 
-    w <- sapply(y.ols,"[[",3) 
+if (av == "aicc")
+  {
+    w <- sapply(y.ols,"[[",3)
     w <- w - min(w)
     w <- exp(-w / 2)
     w <- w / sum(w)
   }
-if (av == "bic") 
-  { 
-    w <- sapply(y.ols,"[[",4) 
+if (av == "bic")
+  {
+    w <- sapply(y.ols,"[[",4)
     w <- w - min(w)
     w <- exp(-w / 2)
     w <- w / sum(w)
   }
-if (av == "mse") 
-  { 
-    w <- sapply(y.ols,"[[",5) 
+if (av == "mse")
+  {
+    w <- sapply(y.ols,"[[",5)
     w <- 1 / w
     w <- w / sum(w)
   }
@@ -303,10 +298,10 @@ y.ols <- as.vector(y.ols)
 
 w.ols <- t(w)
 
-post.inc.ols <- t(w) %*% mods.incl 
+post.inc.ols <- t(w) %*% mods.incl
 colnames(post.inc.ols) <- colnames(coeff.ols)
 
-exp.var.ols <- t(w) %*% (as.matrix(apply(mods.incl,1,sum))) 
+exp.var.ols <- t(w) %*% (as.matrix(apply(mods.incl,1,sum)))
 
 }
 else
@@ -329,7 +324,7 @@ f.rec.ols <- function(i)
   {
     coeff.all <- matrix(0,nrow=nrow(x),ncol=ncol(x)+1)
     pval.all <- matrix(1,nrow=nrow(x),ncol=ncol(x)+1)
-    
+
     ind <- which(mods.incl[i,-1,drop=FALSE]==1)
     c <- mods.incl[i,1]
     x.i <- x[,ind,drop=FALSE]
@@ -348,7 +343,7 @@ f.rec.ols <- function(i)
       {
         m <- rec.reg(y=y)
       }
-   
+
     if (c==1)
       {
         coeff.m <- m$coeff.
@@ -359,7 +354,7 @@ f.rec.ols <- function(i)
         coeff.m <- cbind(0,m$coeff.)
         pval.m <- cbind(1,m$p.val)
       }
-     
+
     coeff.all[,1] <- coeff.m[,1]
     pval.all[,1] <- pval.m[,1]
 
@@ -368,7 +363,7 @@ f.rec.ols <- function(i)
         coeff.all[,1+ind] <- coeff.m[,-1]
         pval.all[,1+ind] <- pval.m[,-1]
       }
-    
+
     return(list(m$y.hat,m$AIC,m$AICc,m$BIC,m$MSE,coeff.all,pval.all))
   }
 
@@ -381,34 +376,34 @@ else
     y.rec.ols <- lapply(seq(nrow(mods.incl)),f.rec.ols)
   }
 
-if (av == "ord") 
-  { 
-    w <- matrix(1 / nrow(mods.incl),nrow=nrow(x),ncol=nrow(mods.incl)) 
+if (av == "ord")
+  {
+    w <- matrix(1 / nrow(mods.incl),nrow=nrow(x),ncol=nrow(mods.incl))
   }
-if (av == "aic") 
-  { 
-    w <- sapply(y.rec.ols,"[[",2) 
+if (av == "aic")
+  {
+    w <- sapply(y.rec.ols,"[[",2)
     w <- f.c(w)
     w <- rbind(rep.int(1 / nrow(mods.incl),nrow(mods.incl)), w)
     w <- w[-nrow(w),]
   }
-if (av == "aicc") 
-  { 
-    w <- sapply(y.rec.ols,"[[",3) 
+if (av == "aicc")
+  {
+    w <- sapply(y.rec.ols,"[[",3)
     w <- f.c(w)
     w <- rbind(rep.int(1 / nrow(mods.incl),nrow(mods.incl)), w)
     w <- w[-nrow(w),]
   }
-if (av == "bic") 
-  { 
-    w <- sapply(y.rec.ols,"[[",4) 
+if (av == "bic")
+  {
+    w <- sapply(y.rec.ols,"[[",4)
     w <- f.c(w)
     w <- rbind(rep.int(1 / nrow(mods.incl),nrow(mods.incl)), w)
     w <- w[-nrow(w),]
   }
-if (av == "mse") 
-  { 
-    w <- sapply(y.rec.ols,"[[",5) 
+if (av == "mse")
+  {
+    w <- sapply(y.rec.ols,"[[",5)
     w <- 1 / w
     w <- gNormalize(w)
     w <- rbind(rep.int(1 / nrow(mods.incl),nrow(mods.incl)), w)
@@ -423,14 +418,14 @@ if (!is.null(gprob.old))
     gprob <- t(sapply(seq(1,nrow(gprob.old)), function(i) colMeans(gprob.old[1:i,,drop=FALSE])))
     w.g <- sapply(seq(nrow(mods.incl)),f.gprob)
     w.g <- gNormalize(w.g)
-    w <- omega * w + (1-omega) * w.g
+    w[gprob.ind:nrow(w),] <- omega * w[gprob.ind:nrow(w),] + (1-omega) * w.g
   }
 
 w.rec.ols <- w
 
-post.inc.rec.ols <- w %*% mods.incl 
+post.inc.rec.ols <- w %*% mods.incl
 
-exp.var.rec.ols <- w %*% (as.matrix(apply(mods.incl,1,sum))) 
+exp.var.rec.ols <- w %*% (as.matrix(apply(mods.incl,1,sum)))
 
 coeff <- lapply(y.rec.ols,"[[",6)
 pval <- lapply(y.rec.ols,"[[",7)
@@ -457,8 +452,8 @@ for (t in 1:nrow(x))
     coeff.rec.ols <- rbind(coeff.rec.ols,coeff.av)
     pval.rec.ols <- rbind(pval.rec.ols,pval.av)
   }
-coeff.rec.ols <- coeff.rec.ols[-1,] 
-pval.rec.ols <- pval.rec.ols[-1,] 
+coeff.rec.ols <- coeff.rec.ols[-1,]
+pval.rec.ols <- pval.rec.ols[-1,]
 
 colnames(coeff.rec.ols) <- c("const",colnames(x))
 colnames(pval.rec.ols) <- colnames(coeff.rec.ols)
@@ -520,7 +515,7 @@ f.roll.ols <- function(i)
         coeff.m <- cbind(0,m$coeff.)
         pval.m <- cbind(1,m$p.val)
       }
-     
+
     coeff.all[,1] <- coeff.m[,1]
     pval.all[,1] <- pval.m[,1]
     if (ncol(coeff.m)>1)
@@ -541,34 +536,34 @@ else
     y.roll.ols <- lapply(seq(nrow(mods.incl)),f.roll.ols)
   }
 
-if (av == "ord") 
-  { 
-    w <- matrix(1 / nrow(mods.incl),nrow=nrow(x),ncol=nrow(mods.incl)) 
+if (av == "ord")
+  {
+    w <- matrix(1 / nrow(mods.incl),nrow=nrow(x),ncol=nrow(mods.incl))
   }
-if (av == "aic") 
-  { 
-    w <- sapply(y.roll.ols,"[[",2) 
+if (av == "aic")
+  {
+    w <- sapply(y.roll.ols,"[[",2)
     w <- f.c(w)
     w <- rbind(rep.int(1 / nrow(mods.incl),nrow(mods.incl)), w)
     w <- w[-nrow(w),]
   }
-if (av == "aicc") 
-  { 
-    w <- sapply(y.roll.ols,"[[",3) 
+if (av == "aicc")
+  {
+    w <- sapply(y.roll.ols,"[[",3)
     w <- f.c(w)
     w <- rbind(rep.int(1 / nrow(mods.incl),nrow(mods.incl)), w)
     w <- w[-nrow(w),]
   }
-if (av == "bic") 
-  { 
-    w <- sapply(y.roll.ols,"[[",4) 
+if (av == "bic")
+  {
+    w <- sapply(y.roll.ols,"[[",4)
     w <- f.c(w)
     w <- rbind(rep.int(1 / nrow(mods.incl),nrow(mods.incl)), w)
     w <- w[-nrow(w),]
   }
-if (av == "mse") 
-  { 
-    w <- sapply(y.roll.ols,"[[",5) 
+if (av == "mse")
+  {
+    w <- sapply(y.roll.ols,"[[",5)
     w <- 1 / w
     w <- gNormalize(w)
     w <- rbind(rep.int(1 / nrow(mods.incl),nrow(mods.incl)), w)
@@ -585,14 +580,14 @@ if (!is.null(gprob.old))
     gprob <- rbind(gprob1,gprob2)
     w.g <- sapply(seq(nrow(mods.incl)),f.gprob)
     w.g <- gNormalize(w.g)
-    w <- omega * w + (1-omega) * w.g
+    w[gprob.ind:nrow(w),] <- omega * w[gprob.ind:nrow(w),] + (1-omega) * w.g
   }
 
 w.roll.ols <- w
 
-post.inc.roll.ols <- w %*% mods.incl 
+post.inc.roll.ols <- w %*% mods.incl
 
-exp.var.roll.ols <- w %*% (as.matrix(apply(mods.incl,1,sum))) 
+exp.var.roll.ols <- w %*% (as.matrix(apply(mods.incl,1,sum)))
 
 coeff <- lapply(y.roll.ols,"[[",6)
 pval <- lapply(y.roll.ols,"[[",7)
@@ -619,8 +614,8 @@ for (t in 1:nrow(x))
     coeff.roll.ols <- rbind(coeff.roll.ols,coeff.av)
     pval.roll.ols <- rbind(pval.roll.ols,pval.av)
   }
-coeff.roll.ols <- coeff.roll.ols[-1,] 
-pval.roll.ols <- pval.roll.ols[-1,] 
+coeff.roll.ols <- coeff.roll.ols[-1,]
+pval.roll.ols <- pval.roll.ols[-1,]
 
 colnames(coeff.roll.ols) <- c("const",colnames(x))
 colnames(pval.roll.ols) <- colnames(coeff.roll.ols)
@@ -655,7 +650,7 @@ f.tvp <- function(i)
     c <- mods.incl[i,1]
 
     x.i <- x[,ind,drop=FALSE]
-      
+
     if (c==1)
       {
         m <- tvp(y=y,x=x.i,V=1,lambda=0.99,c=TRUE)
@@ -668,7 +663,7 @@ f.tvp <- function(i)
       }
     aic <- vector()
     aicc <- vector()
-    bic <- vector() 
+    bic <- vector()
     for (i in 1:length(as.vector(y)))
       {
         if (c==1)
@@ -691,7 +686,7 @@ f.tvp <- function(i)
       {
         mse[j] <- mean((fv[1:j]-as.vector(y)[1:j])^2)
       }
-      
+
     coeff.all <- matrix(0,nrow=nrow(x),ncol=ncol(x)+1)
 
     if (c==1)
@@ -702,7 +697,7 @@ f.tvp <- function(i)
       {
         coeff.m <- cbind(0,m$thetas)
       }
-     
+
     coeff.all[,1] <- coeff.m[,1]
     if (ncol(coeff.m)>1)
       {
@@ -721,34 +716,34 @@ else
     y.tvp <- lapply(seq(nrow(mods.incl)),f.tvp)
   }
 
-if (av == "ord") 
-  { 
-    w <- matrix(1 / nrow(mods.incl),nrow=nrow(x),ncol=nrow(mods.incl)) 
+if (av == "ord")
+  {
+    w <- matrix(1 / nrow(mods.incl),nrow=nrow(x),ncol=nrow(mods.incl))
   }
-if (av == "aic") 
-  { 
-    w <- sapply(y.tvp,"[[",2) 
+if (av == "aic")
+  {
+    w <- sapply(y.tvp,"[[",2)
     w <- f.c(w)
     w <- rbind(rep.int(1 / nrow(mods.incl),nrow(mods.incl)), w)
     w <- w[-nrow(w),]
   }
-if (av == "aicc") 
-  { 
-    w <- sapply(y.tvp,"[[",3) 
+if (av == "aicc")
+  {
+    w <- sapply(y.tvp,"[[",3)
     w <- f.c(w)
     w <- rbind(rep.int(1 / nrow(mods.incl),nrow(mods.incl)), w)
     w <- w[-nrow(w),]
   }
-if (av == "bic") 
-  { 
-    w <- sapply(y.tvp,"[[",4) 
+if (av == "bic")
+  {
+    w <- sapply(y.tvp,"[[",4)
     w <- f.c(w)
     w <- rbind(rep.int(1 / nrow(mods.incl),nrow(mods.incl)), w)
     w <- w[-nrow(w),]
   }
-if (av == "mse") 
-  { 
-    w <- sapply(y.tvp,"[[",5) 
+if (av == "mse")
+  {
+    w <- sapply(y.tvp,"[[",5)
     w <- 1 / w
     w <- gNormalize(w)
     w <- rbind(rep.int(1 / nrow(mods.incl),nrow(mods.incl)), w)
@@ -763,14 +758,14 @@ if (!is.null(gprob.old))
     gprob <- gprob.old
     w.g <- sapply(seq(nrow(mods.incl)),f.gprob)
     w.g <- gNormalize(w.g)
-    w <- omega * w + (1-omega) * w.g
+    w[gprob.ind:nrow(w),] <- omega * w[gprob.ind:nrow(w),] + (1-omega) * w.g
   }
 
 w.tvp <- w
 
-post.inc.tvp <- w %*% mods.incl 
+post.inc.tvp <- w %*% mods.incl
 
-exp.var.tvp <- w %*% (as.matrix(apply(mods.incl,1,sum))) 
+exp.var.tvp <- w %*% (as.matrix(apply(mods.incl,1,sum)))
 
 coeff <- lapply(y.tvp,"[[",6)
 
@@ -787,7 +782,7 @@ for (t in 1:nrow(x))
     coeff.av <- w[t,] %*% coeff.av
     coeff.tvp <- rbind(coeff.tvp,coeff.av)
   }
-coeff.tvp <- coeff.tvp[-1,] 
+coeff.tvp <- coeff.tvp[-1,]
 
 colnames(coeff.tvp) <- c("const",colnames(x))
 colnames(post.inc.tvp) <- colnames(coeff.tvp)
@@ -819,39 +814,39 @@ fq <- list(y.ols,
            y.roll.ols,
            y.tvp
            )
-           
+
 coeff <- list(coeff.ols,
               coeff.rec.ols,
               coeff.roll.ols,
               coeff.tvp
-              )  
-              
+              )
+
 pval <- list(pval.ols,
              pval.rec.ols,
              pval.roll.ols,
              pval.tvp
-             )     
-             
+             )
+
 weights <- list(w.ols,
                 w.rec.ols,
                 w.roll.ols,
                 w.tvp
-                )    
-                
+                )
+
 post.inc <- list(post.inc.ols,
                  post.inc.rec.ols,
                  post.inc.roll.ols,
                  post.inc.tvp
-                 )   
-                 
+                 )
+
 exp.var <- list(exp.var.ols,
                 exp.var.rec.ols,
                 exp.var.roll.ols,
                 exp.var.tvp
-                )                               
+                )
 
 fq2 <- fq[f]
-            
+
 for (i in 1:4)
 {
   if (!is.null(fq[[i]]))
@@ -896,7 +891,7 @@ if (! is.null(fmod))
 
 if (parallel == TRUE)
   {
-    stopCluster(cl) 
+    stopCluster(cl)
     rm(cl)
   }
 
@@ -906,4 +901,3 @@ class(r) <- "altf2"
 return(r)
 
   }
-  

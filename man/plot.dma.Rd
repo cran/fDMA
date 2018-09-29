@@ -6,10 +6,11 @@
 
 \description{The function plots selected outcomes from \code{\link{fDMA}}.}
 
-\usage{\method{plot}{dma}(x, ...)}
+\usage{\method{plot}{dma}(x,non.interactive=NULL, ...)}
 
 \arguments{
 \item{x}{an object of \code{dma} class}
+\item{non.interactive}{optional, \code{\link[base]{logical}}, indicate whether plots should be made in non-interactive mode, by default \code{non.interactive=FALSE}, i.e., the user specifies in the interactive menu which plots will be made}
 \item{...}{not used}
 }
 
@@ -57,6 +58,8 @@ If {x} comes from estimation of Dynamic Model Selection (DMS) or Median Probabil
 
 
 Chosing 0 exits the \code{plot} command.
+
+If \code{non.interactive=TRUE} all the above plots are made.
 }
 
 \note{
@@ -67,7 +70,6 @@ If \code{\link[grDevices]{graphics.off}} is not executed before plotting \code{d
 
 \examples{
 \dontrun{
-data(crudeoil)
 wti <- crudeoil[-1,1]
 drivers <- (lag(crudeoil[,-1],k=1))[-1,]
 ld.wti <- (diff(log(wti)))[-1,]

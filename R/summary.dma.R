@@ -25,12 +25,11 @@ summary.dma <- function(object, ...)
    cat("Model: ")
    cat(colnames(x$y))
    cat(" ~ ")
-   cat("const ")
-   cat(colnames(x$models))
+   cat(paste(colnames(x$models),collapse=" + "))
    cat("\n")
    cat("\n")
      
-   print(x$parameters)
+   print(x$parameters,quote=FALSE)
    cat("\n")
    
    err <- rbind(x$RMSE,x$MAE)
@@ -50,7 +49,7 @@ summary.dma <- function(object, ...)
    
    cat("\n")
    cat("\n")
-   print(s)
+   print(s,quote=FALSE)
    cat("\n")
    
    if (x$parameters[1,4] == "DMA") 
@@ -63,4 +62,5 @@ summary.dma <- function(object, ...)
     {
       cat("* inc = relative frequency of a variable inclusion")
     }
+   cat("\n")
   }

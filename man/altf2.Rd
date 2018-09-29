@@ -47,7 +47,6 @@ If \code{gprob} is used, then for OLS mean values from all periods are taken, fo
 \examples{
 \dontrun{
 # models for untransformed data
-data(crudeoil)
 wti <- crudeoil[-1,1]
 drivers <- (lag(crudeoil[,-1],k=1))[-1,]
 a1 <- altf2(y=wti,x=drivers)

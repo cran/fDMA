@@ -58,28 +58,14 @@ if (is.matrix(y) && anyNA(colnames(y)))
 if (anyNA(y)) { stop("missing values in y") }
 if (length(y) < 3) { stop("time-series too short: there have to be more than 3 observations") }
 if (is.null(initial.period)) { initial.period <- 1 }
-if (! is.numeric(initial.period)) { stop("initial.period must be a number") }
+if (! is.numeric(initial.period)) { stop("initial.period must be numeric") }
 if ((initial.period <= 0) || (initial.period > length(y))) { stop("initial.period must be greater than or equal to 1, and less than the number of observations") }
 if (is.null(av)) { av <- "ord" }
 if (! av %in% c("ord","aic","aicc","bic","mse") && ! is.numeric(av)) { stop("please, specify correct models averaging method") }
 if (is.null(d)) { d <- FALSE }
 if (! is.logical(d)) { stop("d must be logical, i.e., TRUE or FALSE") }
-if (requireNamespace('forecast')) { } else { stop('package >>forecast<< is required') }
-if (requireNamespace('stats')) { } else { stop('package >>stats<< is required') }
-requireNamespace('xts')
 if (is.null(parallel)) { parallel <- FALSE }
 if (! is.logical(parallel)) { stop("parallel must be logical, i.e., TRUE or FALSE") }
-if (parallel == TRUE)
-  {
-    if (requireNamespace('parallel')) 
-      {
-      } 
-    else 
-      {
-        stop("for parallel computations package >>parallel<< is required")
-      }
-  }
-
 
 
 y <- as.matrix(y)

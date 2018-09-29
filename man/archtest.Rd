@@ -26,7 +26,6 @@ archtest(ts,lag=NULL)
 }
 
 \examples{
-data(crudeoil)
 wti <- crudeoil[-1,1]
 ld.wti <- (diff(log(wti)))[-1,]
 arch <- archtest(ts=as.vector(ld.wti),lag=10)

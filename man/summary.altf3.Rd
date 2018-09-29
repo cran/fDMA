@@ -20,7 +20,6 @@ Additionally, it provides mean values of coefficients and how often p-values (av
 
 \examples{
 \dontrun{
-data(crudeoil)
 wti <- crudeoil[-1,1]
 drivers <- (lag(crudeoil[,-1],k=1))[-1,]
 a <- altf3(y=wti,x=drivers,windows=c(36,100,150))

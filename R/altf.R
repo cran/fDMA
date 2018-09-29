@@ -61,15 +61,11 @@ if (!(is.numeric(window))) { stop("window must be numeric") }
 if ((window < 0) || (window > length(y))) { stop("window must be a positive number less then the total number of observations") }
 if (length(y) < 3) { stop("time-series too short: there have to be more than 3 observations") }
 if (is.null(initial.period)) { initial.period <- 1 }
-if (! is.numeric(initial.period)) { stop("initial.period must be a number") }
+if (! is.numeric(initial.period)) { stop("initial.period must be numeric") }
 if ((initial.period <= 0) || (initial.period > length(y))) { stop("initial.period must be greater than or equal to 1, and less than the number of observations") }
 if (is.null(d)) { d <- FALSE }
 if (! is.logical(d)) { stop("d must be logical, i.e., TRUE or FALSE") }
 if (is.null(f)) { f <- rep(TRUE,11) }
-if (requireNamespace('forecast')) { } else { stop('package >>forecast<< is required') }
-if (requireNamespace('stats')) { } else { stop('package >>stats<< is required') }
-if (requireNamespace('MSwM')) { } else { stop('package >>MSwM<< is required') }
-requireNamespace('xts')
 if (is.null(c)) { c <- TRUE }
 
 y <- as.matrix(y)

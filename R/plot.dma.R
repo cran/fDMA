@@ -3,15 +3,13 @@
 
 ### requires "png" and "gplots" packages
 
-plot.dma <- function(x, ...)
+plot.dma <- function(x, non.interactive=NULL, ...)
   {
-    if (requireNamespace('graphics')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>graphics<< is required")
-      }
+
+if (is.null(non.interactive)) 
+  {
+    non.interactive <- FALSE
+  }
        
 plot1 <- function(x)
   {
@@ -64,15 +62,7 @@ plot3 <- function(x)
 
 plot4 <- function(x)
   {
-    if (requireNamespace('gplots')) 
-      {
-        col <- rich.colors(ncol(x$post.incl), palette="temperature", rgb=FALSE, plot=FALSE)
-      } 
-    else 
-      {
-        warning("package >>gplots<< is required ::: a plot might be blurred")
-        col <- seq(1:ncol(x$post.incl))
-      }
+    col <- rich.colors(ncol(x$post.incl), palette="temperature", rgb=FALSE, plot=FALSE)
 
     inc <- vector()
     inc[1] <- 1
@@ -100,7 +90,7 @@ plot4 <- function(x)
       }
     if (x$parameters[1,4] == "DMA")
       {
-        plot(x$post.incl[,i+1], type="l", col=col[i+1], ylim=c(0,1), axes=TRUE, xaxt='n', xlab="", ylab="", main="posteriori inclusion probabilities")
+        plot(x$post.incl[,i+1], type="l", col=col[i+1], ylim=c(0,1), axes=TRUE, xaxt='n', xlab="", ylab="", main="posterior inclusion probabilities")
       }
     if (x$parameters[1,4] == "DMS" || x$parameters[1,4] == "MED")
       {
@@ -119,13 +109,6 @@ plot4 <- function(x)
 
 plot5 <- function(x)
   {
-    if (requireNamespace('png')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>png<< is required")
-      }
     inc <- vector()
     inc[1] <- 1
     for (i in 1:7)
@@ -168,15 +151,7 @@ plot5 <- function(x)
 
 plot6 <- function(x)
   {
-    if (requireNamespace('gplots')) 
-      {
-        col <- rich.colors(ncol(x$exp.coef.)+1, palette="temperature", rgb=FALSE, plot=FALSE)
-      } 
-    else 
-      {
-        warning("package >>gplots<< is required ::: a plot might be blurred")
-        col <- seq(1:ncol(x$exp.coef.))
-      }
+    col <- rich.colors(ncol(x$exp.coef.)+1, palette="temperature", rgb=FALSE, plot=FALSE)
 
     inc <- vector()
     inc[1] <- 1
@@ -201,13 +176,6 @@ plot6 <- function(x)
 
 plot7 <- function(x)
   {
-    if (requireNamespace('png')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>png<< is required")
-      }
     inc <- vector()
     inc[1] <- 1
     for (i in 1:7)
@@ -253,15 +221,7 @@ plot7 <- function(x)
    
 plot8 <- function(x)
   {
-    if (requireNamespace('gplots')) 
-      {
-        col <- rich.colors(ncol(x$post.mod), palette="temperature", rgb=FALSE, plot=FALSE)
-      } 
-    else 
-      {
-        warning("package >>gplots<< is required ::: a plot might be blurred")
-        col <- seq(1:ncol(x$post.mod))
-      }
+    col <- rich.colors(ncol(x$post.mod), palette="temperature", rgb=FALSE, plot=FALSE)
 
     inc <- vector()
     inc[1] <- 1
@@ -317,31 +277,74 @@ plot10 <- function(x)
       {
         if (anyNA(x$DOW.n.mods.t))
           {
-            choices <- c("actual and predicted", "residuals","exp. var", "posterior inclusion probabilities - one plot", 
-                         "posterior inclusion probabilities - separate plots (files in working directory)",
-                         "expected coefficients - one plot", "expected coefficients - separate plots (files in working directory)", 
-                         "exp. lambda", "posterior model probabilities")
-            pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-            switch(pick, plot1(x), plot2(x), plot3(x), plot4(x), plot5(x), plot6(x), plot7(x), plot10(x), plot8(x))
+            if (non.interactive == FALSE) 
+              {
+                choices <- c("actual and predicted", "residuals","exp. var", "posterior inclusion probabilities - one plot", 
+                             "posterior inclusion probabilities - separate plots (files in working directory)",
+                             "expected coefficients - one plot", "expected coefficients - separate plots (files in working directory)", 
+                             "exp. lambda", "posterior model probabilities")
+                pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
+                switch(pick, plot1(x), plot2(x), plot3(x), plot4(x), plot5(x), plot6(x), plot7(x), plot10(x), plot8(x))
+              }
+            else
+              {
+                plot1(x)
+                plot2(x)
+                plot3(x)
+                plot4(x)
+                plot5(x)
+                plot6(x)
+                plot7(x)
+                plot10(x)
+                plot8(x)
+              }
           }
         else
           {
-            choices <- c("actual vs. predicted", "residuals","exp. var", "posterior inclusion probabilities - one plot", 
-                         "posterior inclusion probabilities - separate plots (files in working directory)",
-                         "expected coefficients - one plot", "expected coefficients - separate plots (files in working directory)", 
-                         "exp. lambda", "number of models used in DMA estimation")
-            pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-            switch(pick, plot1(x), plot2(x), plot3(x), plot4(x), plot5(x), plot6(x), plot7(x), plot10(x), plot9(x))
+            if (non.interactive == FALSE) 
+              {
+                choices <- c("actual vs. predicted", "residuals","exp. var", "posterior inclusion probabilities - one plot", 
+                             "posterior inclusion probabilities - separate plots (files in working directory)",
+                             "expected coefficients - one plot", "expected coefficients - separate plots (files in working directory)", 
+                             "exp. lambda", "number of models used in DMA estimation")
+                pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
+                switch(pick, plot1(x), plot2(x), plot3(x), plot4(x), plot5(x), plot6(x), plot7(x), plot10(x), plot9(x))
+              }
+            else
+              {
+                plot1(x)
+                plot2(x)
+                plot3(x)
+                plot4(x)
+                plot5(x)
+                plot6(x)
+                plot7(x)
+                plot10(x)
+                plot9(x)
+              }
           }
       }
     
     if (x$parameters[1,4] == "DMS" || x$parameters[1,4] == "MED")
       {
-         choices <- c("actual vs. predicted", "residuals","exp. var", "posterior inclusion probabilities", 
-                      "expected coefficients - one plot", "expected coefficients - separate plots (files in working directory)",
-                      "exp. lambda")
-         pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-         switch(pick, plot1(x), plot2(x), plot3(x), plot4(x), plot6(x), plot7(x), plot10(x))
+         if (non.interactive == FALSE) 
+           {
+             choices <- c("actual vs. predicted", "residuals","exp. var", "posterior inclusion probabilities", 
+                          "expected coefficients - one plot", "expected coefficients - separate plots (files in working directory)",
+                          "exp. lambda")
+             pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
+             switch(pick, plot1(x), plot2(x), plot3(x), plot4(x), plot6(x), plot7(x), plot10(x))
+           }
+         else
+          {
+            plot1(x)
+            plot2(x)
+            plot3(x)
+            plot4(x)
+            plot6(x)
+            plot7(x)
+            plot10(x)
+          }
       }
 
   }

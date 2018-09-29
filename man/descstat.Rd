@@ -26,7 +26,5 @@ descstat(data)
 \value{\code{\link[base]{matrix}}}
 
 \examples{
-data(crudeoil)
-
 descstat(crudeoil)
 }

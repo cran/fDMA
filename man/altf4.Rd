@@ -4,14 +4,14 @@
 \title{Computes a Time-Varying Parameters Rolling Regression Averaged over Different Window Sizes.}
 
 \description{
-It is necessary to compare a given forecast method with some alternative ones. This function computes selected forecast quality measures for a time-varying parameters rolling regression averaged over different window sizes (which might be treated as alternative forecasting method to Dynamic Model Averaging, Dynamic Model Selection, etc.). The averaging is performed as in Raftery et al. (2010). The only difference is that the state space of the models are constructed not by chosing different combinations of independent variables, but for a fixed set of independent variables various rolling windows sizes are chosen and models constructed in such a way constitute the state space. 
+It is necessary to compare a given forecast method with some alternative ones. This function computes selected forecast quality measures for a time-varying parameters rolling regression averaged over different window sizes (which might be treated as alternative forecasting method to Dynamic Model Averaging, Dynamic Model Selection, etc.). The averaging is performed as in Raftery et al. (2010). The only difference is that the state space of the models are constructed not by chosing different combinations of independent variables, but for a fixed set of independent variables various rolling windows sizes are chosen and models constructed in such a way constitute the state space.
 
 ME (Mean Error), RMSE (Root Mean Squared Error), MAE (Mean Absolute Error), MPE (Mean Percentage Errror) and MAPE (Mean Absolute Percentage Error) are computed as \code{\link[forecast]{accuracy}}. HR (Hit Ratio) is computed as \code{\link{hit.ratio}}.
 }
 
 \usage{
 altf4(y,x,windows,V=NULL,alpha=NULL,lambda=NULL,initial.period=NULL,
-d=NULL,fmod=NULL,parallel=NULL,c=NULL)
+d=NULL,fmod=NULL,parallel=NULL,c=NULL,small.c=NULL)
 }
 
 \arguments{
@@ -26,6 +26,7 @@ d=NULL,fmod=NULL,parallel=NULL,c=NULL)
 \item{fmod}{optional, class \code{dma} object, a model to be compared with alternative forecast}
 \item{parallel}{optional, \code{\link[base]{logical}}, indicate whether parallel computations should be used, by default \code{parallel=FALSE}}
 \item{c}{optional, see \code{\link{tvp}}}
+\item{small.c}{optional, see \code{\link{fDMA}}}
 }
 
 \value{class \code{altf4} object, \code{\link[base]{list}} of
@@ -40,7 +41,6 @@ d=NULL,fmod=NULL,parallel=NULL,c=NULL)
 \examples{
 \dontrun{
 # models for untransformed data
-data(crudeoil)
 wti <- crudeoil[-1,1]
 drivers <- (lag(crudeoil[,-1],k=1))[-1,]
 a1 <- altf4(y=wti,x=drivers,windows=c(36,100,150))
@@ -57,7 +57,7 @@ a3 <- altf4(y=ld.wti,x=ld.drivers,d=TRUE,windows=c(36,100,150))
 win <- c(36,100,150)
 a4 <- altf4(y=ld.wti,x=ld.drivers,d=TRUE,windows=win,alpha=0.9,lambda=0.95)
 
-# models without a constant term 
+# models without a constant term
 a5 <- altf4(y=ld.wti,x=ld.drivers,d=TRUE,windows=win,alpha=0.9,lambda=0.95,c=FALSE)
 
 # models only with a constant term
@@ -67,7 +67,7 @@ a6 <- altf4(y=ld.wti,x=empty,d=TRUE,windows=win,alpha=0.9,lambda=0.95)
 }
 
 \references{
-Pesaran, M. H., Pick, A., 2011. Forecast combination across estimation windows. \emph{Journal of Business & Economic Statistics} \bold{29}, 307--318. 
+Pesaran, M. H., Pick, A., 2011. Forecast combination across estimation windows. \emph{Journal of Business & Economic Statistics} \bold{29}, 307--318.
 
 Raftery, A. E., Gneiting, T., Balabdaoui, F., Polakowski, M., 2005. Using Bayesian Model Averaging to calibrate forecast ensembles. \emph{Monthly Weather Review} \bold{133}, 1155--1174.
 

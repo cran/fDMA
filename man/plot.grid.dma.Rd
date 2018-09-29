@@ -5,10 +5,11 @@
 
 \description{The function plots selected outcomes from \code{\link{grid.DMA}}.}
 
-\usage{\method{plot}{grid.dma}(x, ...)}
+\usage{\method{plot}{grid.dma}(x,non.interactive=NULL, ...)}
 
 \arguments{
 \item{x}{an object of \code{grid.dma} class}
+\item{non.interactive}{optional, \code{\link[base]{logical}}, indicate whether plots should be made in non-interactive mode, by default \code{non.interactive=FALSE}, i.e., the user specifies in the interactive menu which plots will be made}
 \item{...}{not used}
 }
 
@@ -36,6 +37,8 @@ If \code{x} comes from estimation of Dynamic Model Selection (DMS) or Median Pro
 3 - for plotting expected coefficients (including constant) for all estimated models, the outcomes are saved in separate png files in the current working directory, and additionally, plots for different variables are collected into one big plot (also saved as a png file in the current working directory).
 
 Chosing 0 exits the \code{plot} command.
+
+If \code{non.interactive=TRUE} all the above plots are made.
 }
 
 \note{
@@ -50,7 +53,6 @@ Also, if \code{\link[base]{length}(grid.alpha)} or \code{\link[base]{length}(gri
 
 \examples{
 \dontrun{
-data(crudeoil)
 wti <- crudeoil[-1,1]
 drivers <- (lag(crudeoil[,-1],k=1))[-1,]
 ld.wti <- (diff(log(wti)))[-1,]

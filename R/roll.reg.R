@@ -14,9 +14,6 @@ roll.reg <- function(y,x=NULL,window,c=NULL)
 ###     by default c=TRUE (constant is included),
 ###     it is not possible to set c=FALSE if x=NULL 
 
-requireNamespace('xts')
-requireNamespace('stats')
-
 if (is.null(c)) { c <- TRUE }
 
 if (is.null(x)) { c <- TRUE }

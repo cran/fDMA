@@ -19,8 +19,8 @@ hit.ratio <- function (y,y.hat,d=NULL)
 
 if (missing(y)) { stop("please, specify y") }
 if (missing(y.hat)) { stop("please, specify y.hat") }
-if (requireNamespace('xts')) { if (is.xts(y)) { y <- as.matrix(y) } }
-if (requireNamespace('xts')) { if (is.xts(y.hat)) { y.hat <- as.matrix(y.hat) } }
+if (is.xts(y)) { y <- as.matrix(y) } 
+if (is.xts(y.hat)) { y.hat <- as.matrix(y.hat) } 
 if (! (is.vector(y) || is.numeric(y) || is.matrix(y))) { stop("y must be numeric, vector or matrix") }
 if (! (is.vector(y.hat) || is.numeric(y.hat) || is.matrix(y.hat))) { stop("y must be numeric, vector or matrix") }
 if (is.matrix(y) && ! ((ncol(y) == 1) || nrow(y) == 1)) { stop("y must be a one column or one row matrix") }

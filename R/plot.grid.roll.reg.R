@@ -3,16 +3,14 @@
 
 ### requires "png" and "gplots" packages
 
-plot.grid.roll.reg <- function(x, ...)
+plot.grid.roll.reg <- function(x, non.interactive=NULL, ...)
   {
-    if (requireNamespace('graphics')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>graphics<< is required")
-      }
-   
+
+if (is.null(non.interactive)) 
+  {
+    non.interactive <- FALSE
+  }
+  
 plot1g <- function(x)
   {
     plot(rownames(x$fq), x$fq[,1], lty=1, type="l", col="blue", ylim=c(min(x$fq[,1]),max(x$fq[,1])), 
@@ -27,23 +25,7 @@ plot2g <- function(x)
  
 plot3g <- function(x)
   {
-    if (requireNamespace('gplots')) 
-      { 
-        col <- rich.colors(nrow(x$fq)+1, palette="temperature", rgb=FALSE, plot=FALSE) 
-      } 
-    else 
-      {
-        warning("package >>gplots<< is required ::: a plot might be blurred")
-        col <- seq(1:(nrow(x$fq)+1))
-      }
-    
-    if (requireNamespace('png')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>png<< is required")
-      }
+    col <- rich.colors(nrow(x$fq)+1, palette="temperature", rgb=FALSE, plot=FALSE) 
 
     names <- colnames(x$models[[1]]$coeff.)
     
@@ -110,24 +92,8 @@ plot3g <- function(x)
 
 plot4g <- function(x)
   {
-    if (requireNamespace('gplots')) 
-      { 
-        col <- rich.colors(nrow(x$fq)+1, palette="temperature", rgb=FALSE, plot=FALSE) 
-      } 
-    else 
-      {
-        warning("package >>gplots<< is required ::: a plot might be blurred")
-        col <- seq(1:(nrow(x$fq)+1))
-      }
+    col <- rich.colors(nrow(x$fq)+1, palette="temperature", rgb=FALSE, plot=FALSE) 
     
-    if (requireNamespace('png')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>png<< is required")
-      }
-
     names <- colnames(x$models[[1]]$coeff.)
     
     inc <- vector()
@@ -180,12 +146,21 @@ plot4g <- function(x)
       dev.off()
   }
 
-
-        choices <- c("RMSE", "MAE",
-                     "coefficients - separate plots (files in working directory)",
-                     "p-values - separate plots (files in working directory)" )
-        pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-        switch(pick, plot1g(x), plot2g(x), plot3g(x), plot4g(x))
+        if (non.interactive == FALSE) 
+          {
+            choices <- c("RMSE", "MAE",
+                         "coefficients - separate plots (files in working directory)",
+                         "p-values - separate plots (files in working directory)" )
+            pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
+            switch(pick, plot1g(x), plot2g(x), plot3g(x), plot4g(x))
+          }
+        else
+          {
+            plot1g(x)
+            plot2g(x)
+            plot3g(x)
+            plot4g(x)
+          }
  
   }
   

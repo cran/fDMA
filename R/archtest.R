@@ -6,14 +6,6 @@ archtest <- function(ts,lag=NULL)
     ### ts - vector, tested time-series
     ### lag - suspected order of ARCH process
     
-    if (requireNamespace('stats')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>stats<< is required")
-      }
-
     if (missing(ts)) { stop("please, specify ts") }
     
     n <- deparse(substitute(ts))

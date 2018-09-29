@@ -21,7 +21,6 @@ gNormalize(data)
 }
 
 \examples{
-data(trends)
 gt <- gNormalize(trends)
 
 gNormalize(rbind(c(0,1,2),c(1,2,3)))

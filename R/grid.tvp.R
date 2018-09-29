@@ -12,17 +12,6 @@ grid.tvp <- function (y,x,V,grid.lambda,W=NULL,kappa=NULL,parallel.grid=NULL,c=N
 
 if (is.null(parallel.grid)) { parallel.grid <- FALSE }
 
-if (parallel.grid == TRUE)
-  {
-    if (requireNamespace('doParallel')) 
-      {
-      } 
-    else 
-      {
-        stop("for parallel computations package >>doParallel<< is required")
-      }
-  }
-
 #############################################
 
 grid.lambda <- unique(grid.lambda)

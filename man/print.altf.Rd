@@ -19,7 +19,6 @@ The function prints forecast quality measures from \code{x}. For details see \co
 
 \examples{
 \dontrun{
-data(crudeoil)
 wti <- crudeoil[-1,1]
 drivers <- (lag(crudeoil[,-1],k=1))[-1,]
 a <- altf(y=wti,x=drivers)

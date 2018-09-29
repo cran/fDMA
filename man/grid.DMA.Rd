@@ -12,14 +12,16 @@ This function is a wrapper of \code{\link{fDMA}}.
 \usage{
 grid.DMA(y,x,grid.alpha,grid.lambda,initvar,W=NULL,initial.period=NULL,V.meth=NULL,
 kappa=NULL,gprob=NULL,omega=NULL,model=NULL,parallel.grid=NULL,m.prior=NULL,
-mods.incl=NULL,DOW=NULL,DOW.nmods=NULL,DOW.type=NULL,DOW.limit.nmods=NULL,bm=NULL)
+mods.incl=NULL,DOW=NULL,DOW.nmods=NULL,DOW.type=NULL,DOW.limit.nmods=NULL,
+forced.models=NULL,forbidden.models=NULL,forced.variables=NULL,bm=NULL,
+small.c=NULL,av=NULL)
 }
 
 \arguments{
 \item{y}{see \code{\link{fDMA}}}
 \item{x}{see \code{\link{fDMA}}}
-\item{grid.alpha}{a numeric \code{\link[base]{vector}} of different values of \code{alpha}}
-\item{grid.lambda}{a numeric \code{\link[base]{vector}} of different values of \code{lambda} or a \code{\link[base]{list}} of numeric vectors for multiple \code{lambda} in one model (see \code{\link{fDMA}})}
+\item{grid.alpha}{a \code{\link[base]{numeric}} \code{\link[base]{vector}} of different values of \code{alpha}}
+\item{grid.lambda}{a \code{\link[base]{numeric}} \code{\link[base]{vector}} of different values of \code{lambda} or a \code{\link[base]{list}} of numeric vectors for multiple \code{lambda} in one model (see \code{\link{fDMA}})}
 \item{initvar}{see \code{\link{fDMA}}}
 \item{W}{see \code{\link{fDMA}}}
 \item{initial.period}{see \code{\link{fDMA}}}
@@ -28,14 +30,19 @@ mods.incl=NULL,DOW=NULL,DOW.nmods=NULL,DOW.type=NULL,DOW.limit.nmods=NULL,bm=NUL
 \item{gprob}{see \code{\link{fDMA}}}
 \item{omega}{see \code{\link{fDMA}}}
 \item{model}{see \code{\link{fDMA}}}
-\item{parallel.grid}{optional, \code{\link[base]{logical}}, indicate whether parallel computations should be used, by default \code{parallel=FALSE}}
+\item{parallel.grid}{optional, \code{\link[base]{logical}}, indicate whether parallel computations should be used, by default \code{parallel.grid=FALSE}}
 \item{m.prior}{see \code{\link{fDMA}}}
 \item{mods.incl}{see \code{\link{fDMA}}}
 \item{DOW}{see \code{\link{fDMA}}}
 \item{DOW.nmods}{see \code{\link{fDMA}}}
 \item{DOW.type}{see \code{\link{fDMA}}}
 \item{DOW.limit.nmods}{see \code{\link{fDMA}}}
+\item{forced.models}{see \code{\link{fDMA}}}
+\item{forbidden.models}{see \code{\link{fDMA}}}
+\item{forced.variables}{see \code{\link{fDMA}}}
 \item{bm}{see \code{\link{fDMA}}}
+\item{small.c}{see \code{\link{fDMA}}}
+\item{av}{see \code{\link{fDMA}}}
 }
 
 \value{an object of class \code{grid.dma}, \code{\link[base]{list}} of
@@ -46,7 +53,6 @@ mods.incl=NULL,DOW=NULL,DOW.nmods=NULL,DOW.type=NULL,DOW.limit.nmods=NULL,bm=NUL
 }
 
 \examples{
-data(crudeoil)
 wti <- crudeoil[-1,1]
 drivers <- (lag(crudeoil[,-1],k=1))[-1,]
 ld.wti <- (diff(log(wti)))[-1,]

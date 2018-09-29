@@ -20,7 +20,6 @@ normalize(data)
 \value{\code{\link[base]{matrix}}}
 
 \examples{
-data(crudeoil)
 wti <- crudeoil[-1,1]
 drivers <- (lag(crudeoil[,-1],k=1))[-1,]
 

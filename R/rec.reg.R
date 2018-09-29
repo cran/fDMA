@@ -13,9 +13,6 @@ rec.reg <- function(y,x=NULL,c=NULL)
     ###     it is not possible to set c=FALSE if x=NULL 
 
 
-    requireNamespace('xts')
-    requireNamespace('stats')
-
     if (is.null(c)) { c <- TRUE }
     
     if (is.null(x)) { c <- TRUE }

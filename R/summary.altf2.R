@@ -16,7 +16,7 @@ summary.altf2 <- function(object, ...)
    colnames(c) <- colnames(x$coeff.[[1]])
    rownames(c) <- names(x$coeff.)
    c <- round(c,digits=4)
-   print(c)
+   print(c,quote=FALSE)
    cat("\n")
 
    
@@ -42,9 +42,9 @@ summary.altf2 <- function(object, ...)
       rownames(s) <- colnames(x$coeff.[[1]])
       temp <- names(x$rel.var.imp.)[j]
       names(temp) <- c("")
-      print(temp)
+      print(temp,quote=FALSE)
       cat("\n")
-      print(s)
+      print(s.quote=FALSE)
       cat("\n")
     }
    cat("\n")
@@ -84,9 +84,9 @@ summary.altf2 <- function(object, ...)
          rownames(vv) <- c("0.01","0.05","0.10")
          temp <- names(x$p.val.)[k]
          names(temp) <- c("")
-         print(temp)
+         print(temp,quote=FALSE)
          cat("\n")
-         print(vv)
+         print(vv,quote=FALSE)
          cat("\n")
        }
     }
@@ -94,5 +94,6 @@ summary.altf2 <- function(object, ...)
    cat("\n")
    cat("Forecast quality measures: ")
    cat("\n")
-   print(x$summary)
+   print(x$summary,quote=FALSE)
+   cat("\n")
   }

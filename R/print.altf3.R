@@ -3,5 +3,6 @@ print.altf3 <- function(x, ...)
   {
    cat("Forecast quality measures: ")
    cat("\n")
-   print(x$summary)
+   print(x$summary,quote=FALSE)
+   cat("\n")
   }

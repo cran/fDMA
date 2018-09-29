@@ -3,16 +3,13 @@
 
 ### requires "png" and "gplots" packages
 
-plot.tvp <- function(x, ...)
+plot.tvp <- function(x, non.interactive=NULL, ...)
   {
-    if (requireNamespace('graphics')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>graphics<< is required")
-      }
-       
+
+if (is.null(non.interactive)) 
+  {
+    non.interactive <- FALSE
+  }
 
 plot1 <- function(x)
   {
@@ -50,15 +47,7 @@ plot2 <- function(x)
 
 plot3 <- function(x)
   {
-    if (requireNamespace('gplots')) 
-      {
-        col <- rich.colors(ncol(x$thetas), palette="temperature", rgb=FALSE, plot=FALSE)
-      } 
-    else 
-      {
-        warning("package >>gplots<< is required ::: a plot might be blurred")
-        col <- seq(1:ncol(x$thetas))
-      }
+    col <- rich.colors(ncol(x$thetas), palette="temperature", rgb=FALSE, plot=FALSE)
 
     inc <- vector()
     inc[1] <- 1
@@ -94,13 +83,6 @@ plot3 <- function(x)
 
 plot4 <- function(x)
   {
-    if (requireNamespace('png')) 
-      {
-      } 
-    else 
-      {
-        stop("package >>png<< is required")
-      }
     inc <- vector()
     inc[1] <- 1
     for (i in 1:7)
@@ -143,10 +125,20 @@ plot4 <- function(x)
       dev.off()
   }
 
-
-  choices <- c("actual and predicted", "residuals", "coefficients - one plot", "coefficients - separate plots (files in working directory)")
-  pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
-  switch(pick, plot1(x), plot2(x), plot3(x), plot4(x))
+if (non.interactive == FALSE) 
+  {
+    choices <- c("actual and predicted", "residuals", "coefficients - one plot", "coefficients - separate plots (files in working directory)")
+    pick <- menu(choices = paste(" ", choices), title = "\nMake a plot selection (or 0 to exit):")
+    switch(pick, plot1(x), plot2(x), plot3(x), plot4(x))
+  }
+else
+  {
+    plot1(x)
+    plot2(x)
+    plot3(x)
+    plot4(x)  
+  }
+  
 
   }
   

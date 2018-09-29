@@ -47,7 +47,6 @@ altf(y,x,window=NULL,initial.period=NULL,d=NULL,f=NULL,fmod=NULL,c=NULL)
 \examples{
 \dontrun{
 # models for untransformed data
-data(crudeoil)
 wti <- crudeoil[-1,1]
 drivers <- (lag(crudeoil[,-1],k=1))[-1,]
 a1 <- altf(y=wti,x=drivers)

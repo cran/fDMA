@@ -1,11 +1,11 @@
 
-altf4 <- function (y,x,windows,V=NULL,alpha=NULL,lambda=NULL,initial.period=NULL,d=NULL,fmod=NULL,parallel=NULL,c=NULL)
+altf4 <- function (y,x,windows,V=NULL,alpha=NULL,lambda=NULL,initial.period=NULL,d=NULL,fmod=NULL,parallel=NULL,c=NULL,small.c=NULL)
   {
 
 ### computes some forecast quality measures for an alternative forecast,
-### similar to altf() and fDMA(), 
+### similar to altf() and fDMA(),
 ### i.e., the averaging like in fDMA() is performed over time-varying parameters rolling regressions with different windows sizes
- 
+
 ### requires "forecast", "parallel", "stats" and "xts" packages
 
 ### y - a numeric or a column matrix of a dependent variable,
@@ -14,15 +14,15 @@ altf4 <- function (y,x,windows,V=NULL,alpha=NULL,lambda=NULL,initial.period=NULL
 
 ### windows - a vector of windows used in rolling regressions
 
-### V - initial variance in the state space equation for the recursive moment estimator updating method, 
+### V - initial variance in the state space equation for the recursive moment estimator updating method,
 ###     as in the paper by Raftery et al. (2010),
 ###     if not specified V = 1 is used
 
 ### alpha - a forgetting factor between 0 and 1 used in probabilities estimations,
-###         if not specified, lambda = 0.99 is used 
+###         if not specified, lambda = 0.99 is used
 
 ### lambda - a forgetting factor between 0 and 1 used in variance approximations,
-###          if not specified, lambda = 0.99 is used 
+###          if not specified, lambda = 0.99 is used
 
 ### initial.period - a number of observation since which forecast quality measures are computed,
 ###                  by default the whole sample is used, i.e., initial.period = 1
@@ -39,49 +39,40 @@ altf4 <- function (y,x,windows,V=NULL,alpha=NULL,lambda=NULL,initial.period=NULL
 
 ### c - a parameter indicating whether constant is included
 
+### small.c - a small constant added to posterior model probabilities,
+###           to prevent possible reduction them to 0 due to computational issues,
+###           by default small.c is taken as in small constant as in Eq. (17)
+###           in Raftery et al. (2010)
 
-
-### checking initial data 
+### checking initial data
 
 if (missing(y)) { stop("please, specify y") }
 if (! (is.numeric(y) || is.matrix(y))) { stop("y must be numeric or matrix") }
 if (is.matrix(y) && ! (ncol(y) == 1)) { stop("y must be a one column matrix") }
-if (is.matrix(y) && is.null(colnames(y))) 
-  { 
-    warning('column name of y was automatically created') 
-    colnames(y) <- colnames(y, do.NULL = FALSE, prefix = "Y") 
+if (is.matrix(y) && is.null(colnames(y)))
+  {
+    warning('column name of y was automatically created')
+    colnames(y) <- colnames(y, do.NULL = FALSE, prefix = "Y")
   }
-if (is.matrix(y) && anyNA(colnames(y))) 
-  { 
-    warning('column name of y was automatically created') 
-    colnames(y) <- "Y1" 
+if (is.matrix(y) && anyNA(colnames(y)))
+  {
+    warning('column name of y was automatically created')
+    colnames(y) <- "Y1"
   }
-if (anyNA(y)) { stop("missing values in y") } 
+if (anyNA(y)) { stop("missing values in y") }
 if (length(y) < 3) { stop("time-series too short: there have to be more than 3 observations") }
 if (is.null(V)) { V <- 1 }
 if (is.null(lambda)) { lambda <- 0.99 }
 if (is.null(alpha)) { alpha <- 0.99 }
 if (is.null(initial.period)) { initial.period <- 1 }
-if (! is.numeric(initial.period)) { stop("initial.period must be a number") }
+if (! is.numeric(initial.period)) { stop("initial.period must be numeric") }
 if ((initial.period <= 0) || (initial.period > length(y))) { stop("initial.period must be greater than or equal to 1, and less than the number of observations") }
 if (is.null(d)) { d <- FALSE }
 if (! is.logical(d)) { stop("d must be logical, i.e., TRUE or FALSE") }
-if (requireNamespace('forecast')) { } else { stop('package >>forecast<< is required') }
-if (requireNamespace('stats')) { } else { stop('package >>stats<< is required') }
-requireNamespace('xts')
 if (is.null(parallel)) { parallel <- FALSE }
 if (! is.logical(parallel)) { stop("parallel must be logical, i.e., TRUE or FALSE") }
-if (parallel == TRUE)
-  {
-    if (requireNamespace('parallel')) 
-      {
-      } 
-    else 
-      {
-        stop("for parallel computations package >>parallel<< is required")
-      }
-  }
-
+if (! is.null(small.c) && ! is.numeric(small.c)) { stop("small.c must be a (small) number") }
+if (! is.null(small.c) && (small.c<0)) { stop("small.c must be positive") }
 
 
 y <- as.matrix(y)
@@ -119,8 +110,8 @@ f.roll.ols <- function(i)
       }
     for (i in 1:(window-1))
       {
-        if (i==1) 
-          { 
+        if (i==1)
+          {
             m <- tvp(y=y[1],x=x[1,,drop=FALSE],V=V,lambda=lambda,c=c)
             y.roll.ols[1] <- m$y.hat[1]
             pd[1] <- m$pred.dens.[1]
@@ -142,8 +133,8 @@ f.roll.ols <- function(i)
         pd[i] <- m$pred.dens.[window]
         coeff <- rbind(coeff,m$thetas[window,])
       }
-   
-    return(list(y.roll.ols,pd,coeff[-1,,drop=FALSE])) 
+
+    return(list(y.roll.ols,pd,coeff[-1,,drop=FALSE]))
   }
 
 if (parallel == TRUE)
@@ -157,12 +148,19 @@ else
 
 ##################################################
 
-w <- sapply(y.roll.ols,"[[",2) 
+w <- sapply(y.roll.ols,"[[",2)
 coeff <- lapply(y.roll.ols,"[[",3)
 y.roll.ols <- sapply(y.roll.ols,"[[",1)
 pi1 <- as.vector(rep.int(1/length(windows),length(windows)))
-c2 <- 0.001 * (1/(2^length(windows)))
-y.pred <- vector() 
+if (is.null(small.c))
+  {
+    c2 <- 0.001 * (1/(2^length(windows)))
+  }
+else
+  {
+    c2 <- small.c
+  }
+y.pred <- vector()
 
 if (c==TRUE)
   {
@@ -232,14 +230,13 @@ if (! is.null(fmod))
 
 if (parallel == TRUE)
   {
-    stopCluster(cl) 
+    stopCluster(cl)
     rm(cl)
   }
 
-r <- list(round(fq,digits=4),fq2,as.matrix(y),coeff.av.all,weights,exp.win) 
+r <- list(round(fq,digits=4),fq2,as.matrix(y),coeff.av.all,weights,exp.win)
 names(r) <- c("summary","y.hat","y","coeff.","weights","exp.win.")
 class(r) <- "altf4"
 return(r)
 
   }
-  

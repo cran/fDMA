@@ -40,7 +40,6 @@ altf3(y,x=NULL,windows,av=NULL,initial.period=NULL,d=NULL,fmod=NULL,parallel=NUL
 \examples{
 \dontrun{
 # models for untransformed data
-data(crudeoil)
 wti <- crudeoil[-1,1]
 drivers <- (lag(crudeoil[,-1],k=1))[-1,]
 a1 <- altf3(y=wti,x=drivers,windows=c(36,100,150))
