@@ -1,3 +1,12 @@
+fDMA ver. 2.2.5 (Release date: 2020-04-03)
+==============
+
+Changes:
+
+* guarantee of positive-definiteness after updating fixed in tvpcpp().
+* small syntax corrections.
+
+
 fDMA ver. 2.2.4 (Release date: 2018-09-29)
 ==============
 

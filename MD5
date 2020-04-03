@@ -1,6 +1,6 @@
-da20a2cc1660b43ff5723fcfaf60d96b *DESCRIPTION
+6440699d72cc997e579e25a48f4305ad *DESCRIPTION
 1c496b397dfb49b071c164fcea454f81 *NAMESPACE
-c8d7e35ac3081e50094bf1221657ca0b *NEWS
+5d28f0a882d14628d72d217be98f80ce *NEWS
 8c7ec55a6e641e2b8e93ab0e6da33fc9 *R/RcppExports.R
 7e23d80a1c5ba738026a1faafe474d0e *R/altf.R
 d569830ff8a06026a888f6f5aea2eb23 *R/altf2.R
@@ -9,7 +9,7 @@ d569830ff8a06026a888f6f5aea2eb23 *R/altf2.R
 2bc591a5c89037155ca346eb942af41a *R/archtest.R
 88abd29b4ee7c012a00b52e8f243232e *R/descstat.R
 76d67078a3d401d115f5c7cf6777b631 *R/dmtest.R
-f033c5920b4d415b4ac20f754f972825 *R/fDMA.R
+a2782520ef55775ffe39c1869c57d026 *R/fDMA.R
 23ce6ce1709b3cfd8282ec82c0abb54c *R/gNormalize.R
 d83569326bd52f28318600dd9a17dd29 *R/grid.DMA.R
 3259dff8568a6aec4ea34cfcaf60144b *R/grid.roll.reg.R
@@ -63,14 +63,14 @@ c8ca133a3ec3bd89fc36347b13a118da *R/tvp.R
 5aae36069872cf4af6b1f07a34a18cbc *inst/CITATION
 1cd7f11e583f93786898a1c78569f732 *inst/doc/fDMA_vignette.pdf
 38fda7383757e46e121860ea1a161982 *inst/doc/fDMA_vignette.pdf.asis
-cb41a3d052ea84c225bf0acfd58ef79e *inst/include/fDMA.h
+4ee6a287816134148170d63aacb76830 *inst/include/fDMA.h
 095a1899d9db5ed813cf0ec0ed494e49 *man/altf.Rd
 787ad7fad2e9e7ce6328a7eb27c9e061 *man/altf2.Rd
 e736661b0b5bad9c37201290816305b0 *man/altf3.Rd
 0556cca414e85bedf1b617958df3837d *man/altf4.Rd
 2df1a037efafd02afc2b03ce77bd17f2 *man/archtest.Rd
 28d4a89d3dac6a5ac937eb1cb33c908f *man/coef.dma.Rd
-c3ae519346d45e6d29fa860553c4462d *man/crudeoil.Rd
+5bd21c4d568df1027fac2238e3aa95df *man/crudeoil.Rd
 04a2c483aaf40afd7c54b9078fac47ae *man/descstat.Rd
 6408bad36cec839d2bf794fa10b93965 *man/dmtest.Rd
 9970fa402815235d8be04aa988281706 *man/fDMA.Rd
@@ -127,5 +127,5 @@ fba13f7c297c32ebad5701233c508c95 *man/summary.tvp.Rd
 079da4fc5c02b32c74f8889e5051ad13 *src/Makevars
 079da4fc5c02b32c74f8889e5051ad13 *src/Makevars.win
 3cecd39c0ded18f866b410268c96cbf2 *src/RcppExports.cpp
-daf384a443c51f364b2a16cacdc0b141 *src/tvpcpp.cpp
+3a8c0ff9b6b258d1596b579943720bfe *src/tvpcpp.cpp
 38fda7383757e46e121860ea1a161982 *vignettes/fDMA_vignette.pdf.asis

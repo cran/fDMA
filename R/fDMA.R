@@ -905,10 +905,10 @@ else
 
 rownames(temp[[2]]) <- rownames(x)
 colnames(temp[[5]]) <- c("const", colnames(x))
-if (threshold==0 && (!is.na(temp[[6]]))) { rownames(temp[[6]]) <- rownames(x) }
+if (threshold==0 & (!any(is.na(temp[[6]])))) { rownames(temp[[6]]) <- rownames(x) }
 if (model == "dma")
   {
-    if (threshold==0 && (!is.na(temp[[6]]))) { colnames(temp[[6]]) <- seq(1,nrow(mods.incl)) }
+    if (threshold==0 & (!any(is.na(temp[[6]])))) { colnames(temp[[6]]) <- seq(1,nrow(mods.incl)) }
   }
 if (model == "dms" || model == "med")
   {

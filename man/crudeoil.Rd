@@ -32,7 +32,7 @@ data}
 
 \url{https://fred.stlouisfed.org}
 
-\url{https://goo.gl/P1WZXb}
+\url{http://tiny.cc/p0lfmz}
 
 \url{https://www.msci.com/end-of-day-data-search}
 }

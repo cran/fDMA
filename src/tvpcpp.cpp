@@ -15,7 +15,7 @@ List tvpcpp(mat x, vec y, mat xe, mat theta, mat E, double lambda, double V, Nul
   vec pdensi(N,fill::zeros), ytvp(N,fill::zeros);
   mat thetas(theta.n_rows,N+1,fill::zeros);
   mat xx(1,xe.n_cols,fill::zeros);
-
+  mat Rf(E.n_rows,E.n_cols,fill::zeros);
   thetas.col(0) <- theta;
 
   for (t=0;t!=N;t++)
@@ -25,17 +25,12 @@ List tvpcpp(mat x, vec y, mat xe, mat theta, mat E, double lambda, double V, Nul
       yhat = as_scalar(xx.t() * theta);
       ei = as_scalar(y(t) - yhat);
       R = E / lambda;
-      tv = as_scalar((xx.t() * R) * xx);
+      Rf = sqrtmat_sympd(R);
+      tv = as_scalar(dot(xx.t() * Rf,xx.t() * Rf));
       Vu = V + tv;
       E = R - (R * xx) *  (xx.t() * R) / Vu;
-      if (Vu>0)
-        {
-          pdensi(t) = exp(-0.5 * ei * ei / Vu ) / sqrt(2*M_PI*Vu);
-        }
-      else
-        {
-          pdensi(t) = exp(-0.5 * ei * ei / V ) / sqrt(2*M_PI*V);
-        }
+      
+      pdensi(t) = exp(-0.5 * ei * ei / Vu ) / sqrt(2*M_PI*Vu);
       
       theta = theta + ( R * xx ) * ei / Vu;
       
